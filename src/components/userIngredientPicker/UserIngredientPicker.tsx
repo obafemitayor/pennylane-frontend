@@ -9,109 +9,21 @@ import {
   VStack,
   HStack,
   IconButton,
-  Combobox,
   Field,
-  Spinner,
 } from '@chakra-ui/react';
 import { MdDelete } from 'react-icons/md';
 import { useListCollection } from '@ark-ui/react';
 import type { Ingredient, UserIngredientPickerInput } from '../../types';
 import { useIngredients } from '../../hooks/useIngredients';
 import { messages } from './messages';
-
-interface IngredientsSelectProps {
-  inputId: string;
-  value: string;
-  collection: ReturnType<typeof useListCollection<{ value: string; label: string }>>['collection'];
-  ingredients: Ingredient[];
-  loading?: boolean;
-  onInputChange: (id: string, value: string) => void;
-  onIngredientSelect: (id: string, ingredient: Ingredient | null) => void;
-}
+import { IngredientsSelect } from './IngredientsSelect/IngredientsSelect';
+import { parseValue, parseIngredient } from '../../utils/ingredientParser';
 
 interface UserIngredientPickerProps {
   userIngredients: UserIngredientPickerInput[];
   setUserIngredients: React.Dispatch<React.SetStateAction<UserIngredientPickerInput[]>>;
   allowMultiple?: boolean;
 }
-
-const parseValue = (name: string): string | null => {
-  const match = name.match(/^Add "(.+)" as an ingredient$/);
-  if (match && match[1]) {
-    return match[1];
-  }
-  return null;
-};
-
-const parseIngredient = (ingredient: Ingredient): Ingredient => {
-  const parsedIngredientName = parseValue(ingredient.name);
-  if (parsedIngredientName) {
-    return { id: null, name: parsedIngredientName };
-  }
-  return ingredient;
-};
-
-const IngredientsSelect: React.FC<IngredientsSelectProps> = ({
-  inputId,
-  value,
-  collection,
-  ingredients,
-  loading = false,
-  onInputChange,
-  onIngredientSelect,
-}) => {
-  const intl = useIntl();
-
-  const handleValueChange = (e: { value: string | string[] }) => {
-    const selectedValue = Array.isArray(e.value) ? e.value[0] : e.value;
-    const selectedIngredient = ingredients.find((ing) =>
-      ing.id !== null ? ing.id.toString() === selectedValue : ing.name === selectedValue
-    );
-    if (selectedIngredient) {
-      const parsedIngredient = parseIngredient(selectedIngredient);
-      onInputChange(inputId, parsedIngredient.name);
-    }
-    onIngredientSelect(inputId, selectedIngredient || null);
-  };
-
-  return (
-    <Box w="100%">
-      <Combobox.Root
-        collection={collection}
-        value={[]}
-        inputValue={value}
-        onInputValueChange={(e) => onInputChange(inputId, e.inputValue)}
-        onValueChange={handleValueChange}
-      >
-        <Combobox.Control w="100%">
-          <Combobox.Input placeholder={intl.formatMessage(messages.searchPlaceholder)} w="100%" />
-          {loading && (
-            <Combobox.IndicatorGroup>
-              <Spinner size="sm" />
-            </Combobox.IndicatorGroup>
-          )}
-        </Combobox.Control>
-        <Combobox.Positioner>
-          <Combobox.Content>
-            {ingredients.length > 0 && (
-              <Combobox.ItemGroup>
-                {ingredients.map((ingredient) => {
-                  const itemKey =
-                    ingredient.id !== null ? ingredient.id.toString() : ingredient.name;
-                  return (
-                    <Combobox.Item key={itemKey} item={itemKey}>
-                      {ingredient.name}
-                    </Combobox.Item>
-                  );
-                })}
-              </Combobox.ItemGroup>
-            )}
-          </Combobox.Content>
-        </Combobox.Positioner>
-      </Combobox.Root>
-    </Box>
-  );
-};
 
 export const UserIngredientPicker: React.FC<UserIngredientPickerProps> = ({
   userIngredients,
