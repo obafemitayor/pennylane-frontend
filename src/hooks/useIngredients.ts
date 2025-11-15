@@ -10,6 +10,10 @@ type IngredientsParams = {
 };
 
 const DEBOUNCE_DELAY = 300;
+// I am deliberately making an assumption that the ingredient the user wants
+// will be found in the first 200 items. So I set PAGE_SIZE to 200.
+// This lets me skip adding pagination to the dropdown,
+// which I feel would be an overkill for this prototype.
 const PAGE_SIZE = 200;
 
 export const useIngredients = () => {

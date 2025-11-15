@@ -7,8 +7,9 @@ export const messages = defineMessages({
   },
   personalIntroduction: {
     id: 'register.emailStep.personalIntroduction',
-    defaultMessage:
-      "Hi, I'm Tayo, your go-to kitchen buddy 💪. I can show you the tastiest recipes you can make with whatever ingredients you already have in your kitchen. If you're ready to get cooking, you can start by telling me your email. That way, I can remember you and always have the perfect recipes waiting whenever you return.",
+    defaultMessage: `Hi, I'm Tayo, your go-to kitchen buddy 💪. I can show you the tastiest recipes you can make with whatever ingredients you already have in your kitchen. 
+    
+If you're ready to get cooking, you can start by telling me your email. That way, I can remember you and always have the perfect recipes waiting whenever you return.`,
   },
   addIngredientsMessage: {
     id: 'register.addIngredientsMessage',
@@ -21,7 +22,7 @@ export const messages = defineMessages({
   },
   registrationFailed: {
     id: 'register.registrationFailed',
-    defaultMessage: 'Failed to create your account. Please try again.',
+    defaultMessage: 'Unfortunately, I was unable to create your account. Please try again.',
   },
   atLeastOneIngredientRequired: {
     id: 'register.atLeastOneIngredientRequired',

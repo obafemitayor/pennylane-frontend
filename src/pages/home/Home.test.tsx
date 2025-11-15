@@ -56,7 +56,7 @@ describe('Home', () => {
     });
   });
 
-  it('validates when an error occurred', () => {
+  it('displays an error message when recipes fail to load', () => {
     (useRecipes as ReturnType<typeof vi.fn>).mockReturnValue({
       recipes: [],
       loading: false,
@@ -70,7 +70,65 @@ describe('Home', () => {
       </BrowserRouter>
     );
 
-    expect(screen.getByText(/no recipes found/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/oops! something went wrong while loading your recipes/i)
+    ).toBeInTheDocument();
+  });
+
+  it('displays an error message when user fails to load', () => {
+    (useUser as ReturnType<typeof vi.fn>).mockReturnValue({
+      user: null,
+      loading: false,
+      error: 'Failed to fetch user',
+      fetchUserByEmail: mockFetchUserByEmail,
+    });
+
+    renderWithProviders(
+      <BrowserRouter>
+        <Home />
+      </BrowserRouter>
+    );
+
+    expect(
+      screen.getByText(/oops! something went wrong while loading your recipes/i)
+    ).toBeInTheDocument();
+  });
+
+  it('displays an error message when categories fail to load', () => {
+    (useCategories as ReturnType<typeof vi.fn>).mockReturnValue({
+      categories: [],
+      loading: false,
+      error: 'Failed to fetch categories',
+      searchCategories: vi.fn(),
+    });
+
+    renderWithProviders(
+      <BrowserRouter>
+        <Home />
+      </BrowserRouter>
+    );
+
+    expect(
+      screen.getByText(/oops! something went wrong while loading your recipes/i)
+    ).toBeInTheDocument();
+  });
+
+  it('displays an error message when cuisines fail to load', () => {
+    (useCuisines as ReturnType<typeof vi.fn>).mockReturnValue({
+      cuisines: [],
+      loading: false,
+      error: 'Failed to fetch cuisines',
+    });
+
+    renderWithProviders(
+      <BrowserRouter>
+        <Home />
+      </BrowserRouter>
+    );
+
+    expect(
+      screen.getByText(/oops! something went wrong while loading your recipes/i)
+    ).toBeInTheDocument();
   });
 
   it('validates that the page displays with data', async () => {

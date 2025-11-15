@@ -1,127 +1,16 @@
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
-import { Box, Table, HStack, IconButton, Text, Button, Dialog, VStack } from '@chakra-ui/react';
+import { Box, Table, HStack, IconButton, Text } from '@chakra-ui/react';
 import { MdEdit, MdDelete } from 'react-icons/md';
-import { UserIngredientPicker } from '../../../../components/userIngredientPicker/UserIngredientPicker';
 import { useUserIngredients } from '../../../../hooks/useUserIngredients';
-import type { UserIngredient, UserIngredientStepInput } from '../../../../types';
+import type { UserIngredient } from '../../../../types';
 import { messages } from './messages';
+import { EditIngredientModal } from '../EditIngredientModal/EditIngredientModal';
 
 interface IngredientListProps {
   userId: number | undefined;
   userIngredientsList: UserIngredient[];
 }
-
-interface EditIngredientModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  ingredient: UserIngredient | null;
-  userId: number | undefined;
-}
-
-const EditIngredientModal: React.FC<EditIngredientModalProps> = ({
-  isOpen,
-  onClose,
-  ingredient,
-  userId,
-}) => {
-  const intl = useIntl();
-  const { updateIngredient, loading } = useUserIngredients(userId);
-  const [userIngredients, setUserIngredients] = useState<UserIngredientStepInput[]>([]);
-
-  React.useEffect(() => {
-    if (ingredient) {
-      setUserIngredients([
-        {
-          id: ingredient.id.toString(),
-          selectedIngredient: {
-            id: ingredient.ingredient_id,
-            name: ingredient.ingredient?.name || '',
-          },
-        },
-      ]);
-    } else {
-      setUserIngredients([]);
-    }
-  }, [ingredient]);
-
-  const handleSave = async () => {
-    if (!ingredient) {
-      return;
-    }
-    const updatedUserIngredient = userIngredients.find((ui) => ui.id === ingredient.id.toString());
-    if (!updatedUserIngredient?.selectedIngredient) {
-      return;
-    }
-    const ingredientPayload = {
-      id: updatedUserIngredient.selectedIngredient.id,
-      name: updatedUserIngredient.selectedIngredient.name,
-    };
-
-    try {
-      await updateIngredient(ingredient.id, ingredientPayload);
-      onClose();
-      window.location.reload();
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error(String(err));
-      alert(error.message || intl.formatMessage(messages.failedToUpdate));
-    }
-  };
-
-  return (
-    <Dialog.Root
-      open={isOpen}
-      onOpenChange={(details) => {
-        if (!details.open) {
-          onClose();
-        }
-      }}
-    >
-      <Dialog.Backdrop />
-      <Dialog.Positioner>
-        <Dialog.Content>
-          <Dialog.Header>
-            <Dialog.Title>{intl.formatMessage(messages.editIngredient)}</Dialog.Title>
-          </Dialog.Header>
-          <Dialog.Body>
-            <VStack gap={4}>
-              <UserIngredientPicker
-                userIngredients={userIngredients}
-                setUserIngredients={setUserIngredients}
-                allowMultiple={false}
-              />
-            </VStack>
-          </Dialog.Body>
-          <Dialog.Footer>
-            <HStack gap={2}>
-              <Button
-                onClick={handleSave}
-                variant="solid"
-                bg="black"
-                color="white"
-                _hover={{ bg: 'gray.800' }}
-                loading={loading}
-                disabled={loading}
-              >
-                {intl.formatMessage(messages.saveChanges)}
-              </Button>
-              <Button
-                onClick={onClose}
-                variant="solid"
-                bg="red.500"
-                color="white"
-                _hover={{ bg: 'red.600' }}
-                disabled={loading}
-              >
-                {intl.formatMessage(messages.cancel)}
-              </Button>
-            </HStack>
-          </Dialog.Footer>
-        </Dialog.Content>
-      </Dialog.Positioner>
-    </Dialog.Root>
-  );
-};
 
 export const IngredientList: React.FC<IngredientListProps> = ({ userId, userIngredientsList }) => {
   const intl = useIntl();

@@ -4,7 +4,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useState, useEffect } from 'react';
 import { UserIngredientPicker } from './UserIngredientPicker';
 import { messages } from './messages';
-import type { Ingredient, UserIngredientStepInput } from '../../types';
+import type { Ingredient, UserIngredientPickerInput } from '../../types';
 import { renderWithProviders } from '../../test/testUtils';
 import { ingredientService } from '../../services/ingredientService';
 
@@ -81,13 +81,13 @@ describe('UserIngredientPicker', () => {
   });
 
   it('displays a new ingredient in the input field when selected"', async () => {
-    const initialUserIngredients: UserIngredientStepInput[] = [
+    const initialUserIngredients: UserIngredientPickerInput[] = [
       { id: '1', selectedIngredient: null },
     ];
     const userIngredientsRef = { current: initialUserIngredients };
     const TestWrapper = () => {
       const [userIngredients, setUserIngredients] =
-        useState<UserIngredientStepInput[]>(initialUserIngredients);
+        useState<UserIngredientPickerInput[]>(initialUserIngredients);
 
       useEffect(() => {
         userIngredientsRef.current = userIngredients;
@@ -128,13 +128,13 @@ describe('UserIngredientPicker', () => {
   });
 
   it('displays an existing ingredient in the input field when selected', async () => {
-    const initialUserIngredients: UserIngredientStepInput[] = [
+    const initialUserIngredients: UserIngredientPickerInput[] = [
       { id: '1', selectedIngredient: null },
     ];
     const userIngredientsRef = { current: initialUserIngredients };
     const TestWrapper = () => {
       const [userIngredients, setUserIngredients] =
-        useState<UserIngredientStepInput[]>(initialUserIngredients);
+        useState<UserIngredientPickerInput[]>(initialUserIngredients);
 
       useEffect(() => {
         userIngredientsRef.current = userIngredients;
@@ -183,13 +183,13 @@ describe('UserIngredientPicker', () => {
   });
 
   it('allows user to add multiple ingredients when allowMultiple is set to true', async () => {
-    const initialUserIngredients: UserIngredientStepInput[] = [
+    const initialUserIngredients: UserIngredientPickerInput[] = [
       { id: '1', selectedIngredient: null },
     ];
     const userIngredientsRef = { current: initialUserIngredients };
     const TestWrapper = () => {
       const [userIngredients, setUserIngredients] =
-        useState<UserIngredientStepInput[]>(initialUserIngredients);
+        useState<UserIngredientPickerInput[]>(initialUserIngredients);
 
       useEffect(() => {
         userIngredientsRef.current = userIngredients;
@@ -264,13 +264,13 @@ describe('UserIngredientPicker', () => {
   });
 
   it('allows user to select existing ingredient in first input and new ingredient in second input when allowMultiple is set to true', async () => {
-    const initialUserIngredients: UserIngredientStepInput[] = [
+    const initialUserIngredients: UserIngredientPickerInput[] = [
       { id: '1', selectedIngredient: null },
     ];
     const userIngredientsRef = { current: initialUserIngredients };
     const TestWrapper = () => {
       const [userIngredients, setUserIngredients] =
-        useState<UserIngredientStepInput[]>(initialUserIngredients);
+        useState<UserIngredientPickerInput[]>(initialUserIngredients);
 
       useEffect(() => {
         userIngredientsRef.current = userIngredients;

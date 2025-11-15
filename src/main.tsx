@@ -9,32 +9,18 @@ import { allMessages } from './i18n/messages';
 import './index.css';
 
 const locale = 'en';
-
-/**
- * Converts messages from defineMessages format to flat object for IntlProvider
- */
-const convertMessagesForIntl = (
-  messages: Record<string, MessageDescriptor>
-): Record<string, string> => {
-  return Object.keys(messages).reduce(
-    (acc, key) => {
-      const message = messages[key as keyof typeof messages];
-      const defaultMessage =
-        typeof message.defaultMessage === 'string' ? message.defaultMessage : '';
-      acc[key] = defaultMessage;
-      return acc;
-    },
-    {} as Record<string, string>
+const getMessages = (messages: Record<string, MessageDescriptor>): Record<string, string> => {
+  return Object.fromEntries(
+    Object.entries(messages).map(([key, descriptor]) => [
+      key,
+      typeof descriptor.defaultMessage === 'string' ? descriptor.defaultMessage : '',
+    ])
   );
 };
 
-const messages = convertMessagesForIntl(
-  allMessages[locale as keyof typeof allMessages] as Record<string, MessageDescriptor>
-);
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <IntlProvider locale={locale} messages={messages}>
+    <IntlProvider locale={locale} messages={getMessages(allMessages[locale])}>
       <ChakraProvider value={defaultSystem}>
         <BrowserRouter>
           <App />

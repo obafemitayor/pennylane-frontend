@@ -31,6 +31,5 @@ export const useCuisines = () => {
     cuisines,
     loading,
     error,
-    fetchCuisines,
   };
 };

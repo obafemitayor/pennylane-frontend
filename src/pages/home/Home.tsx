@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import {
@@ -13,198 +13,16 @@ import {
   VStack,
   HStack,
   Button,
-  Combobox,
-  Select,
 } from '@chakra-ui/react';
-import { useListCollection } from '@ark-ui/react';
 import { useUser } from '../../hooks/useUser';
 import { useRecipes } from '../../hooks/useRecipes';
 import { useCategories } from '../../hooks/useCategories';
 import { useCuisines } from '../../hooks/useCuisines';
+import type { Recipe } from '../../types';
 import { messages } from './messages';
-
-interface CategoryFilterProps {
-  categoryId: number | undefined;
-  onCategoryChange: (categoryId: number | undefined) => void;
-  categories: Array<{ id: number; name: string }>;
-  onInputChange: (value: string) => void;
-  loading?: boolean;
-}
-
-interface CuisineFilterProps {
-  cuisineId: number | undefined;
-  onCuisineChange: (cuisineId: number | undefined) => void;
-  cuisines: Array<{ id: number; name: string }>;
-}
-
-interface ViewUserIngredientsProps {
-  userId: number;
-}
-
-const CategoryFilter: React.FC<CategoryFilterProps> = ({
-  categoryId,
-  onCategoryChange,
-  categories,
-  onInputChange,
-  loading,
-}) => {
-  const intl = useIntl();
-  const [inputValue, setInputValue] = useState<string>('');
-  const { collection, set: setCollection } = useListCollection<{ value: string; label: string }>({
-    initialItems: [],
-  });
-
-  useEffect(() => {
-    setCollection([
-      { value: '', label: intl.formatMessage(messages.categoriesFilter) },
-      ...categories.map((cat) => ({ value: cat.id.toString(), label: cat.name })),
-    ]);
-  }, [categories, intl, setCollection]);
-
-  useEffect(() => {
-    if (!categoryId) {
-      setInputValue('');
-      return;
-    }
-    const selectedCategory = categories.find((cat) => cat.id === categoryId);
-    if (selectedCategory) {
-      setInputValue(selectedCategory.name);
-    }
-  }, [categoryId, categories]);
-
-  const handleInputValueChange = (e: { inputValue: string }) => {
-    setInputValue(e.inputValue);
-    onInputChange(e.inputValue);
-  };
-
-  const handleValueChange = (e: { value: string | string[] }) => {
-    const selectedValue = Array.isArray(e.value) ? e.value[0] : e.value;
-    if (selectedValue === '') {
-      onCategoryChange(undefined);
-      setInputValue('');
-      return;
-    }
-    onCategoryChange(selectedValue ? Number(selectedValue) : undefined);
-  };
-
-  return (
-    <Box maxW="200px">
-      <Combobox.Root
-        collection={collection}
-        value={categoryId ? [categoryId.toString()] : []}
-        onInputValueChange={handleInputValueChange}
-        onValueChange={handleValueChange}
-      >
-        <Combobox.Control bg="white">
-          <Combobox.Input
-            placeholder={intl.formatMessage(messages.categoriesFilter)}
-            value={inputValue}
-            color="gray.900"
-            bg="white"
-          />
-          {loading && (
-            <Combobox.IndicatorGroup>
-              <Spinner size="sm" />
-            </Combobox.IndicatorGroup>
-          )}
-        </Combobox.Control>
-        <Combobox.Positioner>
-          <Combobox.Content>
-            {categories.length === 0 && !loading && (
-              <Combobox.Empty>{intl.formatMessage(messages.noCategories)}</Combobox.Empty>
-            )}
-            {categories.length > 0 && (
-              <Combobox.ItemGroup>
-                <Combobox.Item key="all" item="">
-                  {intl.formatMessage(messages.categoriesFilter)}
-                </Combobox.Item>
-                {categories.map((cat) => (
-                  <Combobox.Item key={cat.id} item={cat.id.toString()}>
-                    {cat.name}
-                  </Combobox.Item>
-                ))}
-              </Combobox.ItemGroup>
-            )}
-          </Combobox.Content>
-        </Combobox.Positioner>
-      </Combobox.Root>
-    </Box>
-  );
-};
-
-const CuisineFilter: React.FC<CuisineFilterProps> = ({ cuisineId, onCuisineChange, cuisines }) => {
-  const intl = useIntl();
-
-  const selectItems = useMemo(
-    () => [
-      { value: '', label: intl.formatMessage(messages.cuisinesFilter) },
-      ...cuisines.map((cuisine) => ({ value: cuisine.id.toString(), label: cuisine.name })),
-    ],
-    [cuisines, intl]
-  );
-
-  const { collection, set: setCollection } = useListCollection({
-    initialItems: selectItems,
-  });
-
-  useEffect(() => {
-    setCollection(selectItems);
-  }, [selectItems, setCollection]);
-
-  const selectedCuisine = cuisines.find((cuisine) => cuisine.id === cuisineId);
-  const selectedValue = selectedCuisine ? selectedCuisine.id.toString() : '';
-
-  return (
-    <Box minW="200px" maxW="250px">
-      <Select.Root
-        collection={collection}
-        value={selectedValue ? [selectedValue] : []}
-        onValueChange={(e) => {
-          const selectedValue = Array.isArray(e.value) ? e.value[0] : e.value;
-          if (selectedValue === '') {
-            onCuisineChange(undefined);
-          } else {
-            onCuisineChange(selectedValue ? Number(selectedValue) : undefined);
-          }
-        }}
-      >
-        <Select.HiddenSelect />
-        <Select.Control bg="white" color="gray.900">
-          <Select.Trigger bg="white" color="gray.900">
-            <Select.ValueText
-              placeholder={intl.formatMessage(messages.cuisinesFilter)}
-              color="gray.900"
-            />
-          </Select.Trigger>
-        </Select.Control>
-        <Select.Positioner>
-          <Select.Content>
-            {selectItems.map((item) => (
-              <Select.Item key={item.value || 'all'} item={item.value}>
-                {item.label}
-              </Select.Item>
-            ))}
-          </Select.Content>
-        </Select.Positioner>
-      </Select.Root>
-    </Box>
-  );
-};
-
-const ViewUserIngredients: React.FC<ViewUserIngredientsProps> = ({ userId }) => {
-  const intl = useIntl();
-  const navigate = useNavigate();
-  return (
-    <Button
-      onClick={() => navigate(`/users/${userId}/user-ingredients`)}
-      variant="solid"
-      colorPalette="gray"
-      color="white"
-    >
-      {intl.formatMessage(messages.manageUserIngredients)}
-    </Button>
-  );
-};
+import { CategoryFilter } from './components/CategoryFilter/CategoryFilter';
+import { CuisineFilter } from './components/CuisineFilter/CuisineFilter';
+import { ViewUserIngredients } from './components/ViewUserIngredients/ViewUserIngredients';
 
 const getRecipeBadgeInfo = (
   missingCount: number | undefined | null,
@@ -231,23 +49,43 @@ const getRecipeBadgeInfo = (
   }
 };
 
+const paginateRecipes = (recipes: Recipe[], currentPage: number, itemsPerPage: number) => {
+  const totalPages = Math.ceil(recipes.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentRecipes = recipes.slice(startIndex, endIndex);
+
+  return {
+    currentRecipes,
+    totalPages,
+  };
+};
+
 export const Home: React.FC = () => {
   const intl = useIntl();
   const { email } = useParams<{ email: string }>();
   const navigate = useNavigate();
-  const { user, loading: userLoading, fetchUserByEmail } = useUser();
-  const { recipes, loading: recipesLoading, getMostRelevantRecipes } = useRecipes();
-  const { categories, loading: categoriesLoading, searchCategories } = useCategories();
-  const { cuisines, loading: cuisinesLoading } = useCuisines();
+  const { user, loading: userLoading, fetchUserByEmail, error: userError } = useUser();
+  const {
+    recipes,
+    loading: recipesLoading,
+    getMostRelevantRecipes,
+    error: recipesError,
+  } = useRecipes();
+  const {
+    categories,
+    loading: categoriesLoading,
+    searchCategories,
+    error: categoriesError,
+  } = useCategories();
+  const { cuisines, loading: cuisinesLoading, error: cuisinesError } = useCuisines();
   const [categoryId, setCategoryId] = useState<number | undefined>(undefined);
   const [cuisineId, setCuisineId] = useState<number | undefined>(undefined);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  const totalPages = Math.ceil(recipes.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentRecipes = recipes.slice(startIndex, endIndex);
+  // Doing Client-Side Pagination because the API returns a maximum of 50 recipes.
+  const { currentRecipes, totalPages } = paginateRecipes(recipes, currentPage, itemsPerPage);
 
   useEffect(() => {
     if (email) {
@@ -275,6 +113,16 @@ export const Home: React.FC = () => {
     return (
       <Container centerContent>
         <Spinner size="xl" mt={8} />
+      </Container>
+    );
+  }
+
+  if (userError || recipesError || categoriesError || cuisinesError) {
+    return (
+      <Container centerContent>
+        <Text mt={8} color="red.500">
+          {intl.formatMessage(messages.errorLoadingData)}
+        </Text>
       </Container>
     );
   }

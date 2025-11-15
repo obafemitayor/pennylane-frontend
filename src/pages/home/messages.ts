@@ -6,25 +6,9 @@ export const messages = defineMessages({
     defaultMessage:
       "Here's what you can cook now… and the ones you're just a few ingredients away from. 👌",
   },
-  categoriesFilter: {
-    id: 'home.categoriesFilter',
-    defaultMessage: 'Filter by Category',
-  },
-  cuisinesFilter: {
-    id: 'home.cuisinesFilter',
-    defaultMessage: 'Filter by Cuisine',
-  },
-  manageUserIngredients: {
-    id: 'home.manageUserIngredients',
-    defaultMessage: 'Your Ingredients',
-  },
   userNotFound: {
     id: 'home.userNotFound',
     defaultMessage: 'User not found',
-  },
-  noRecipesFound: {
-    id: 'home.noRecipesFound',
-    defaultMessage: 'No recipes found. Add more ingredients to your user ingredients!',
   },
   cook: {
     id: 'home.cook',
@@ -46,22 +30,6 @@ export const messages = defineMessages({
     id: 'home.min',
     defaultMessage: 'min',
   },
-  has: {
-    id: 'home.has',
-    defaultMessage: 'Has',
-  },
-  missing: {
-    id: 'home.missing',
-    defaultMessage: 'Missing',
-  },
-  loading: {
-    id: 'home.loading',
-    defaultMessage: 'Loading...',
-  },
-  noCategories: {
-    id: 'home.noCategories',
-    defaultMessage: 'No categories available',
-  },
   recipesNotFound: {
     id: 'home.recipesNotFound',
     defaultMessage: 'No recipes found',
@@ -79,5 +47,10 @@ export const messages = defineMessages({
     id: 'home.needManyIngredients',
     defaultMessage:
       'This one\'s a stretch, your pantry said "not today"😅. You\'re missing quite a few ingredients for this recipe.',
+  },
+  errorLoadingData: {
+    id: 'home.errorLoadingData',
+    defaultMessage:
+      'Oops! Something went wrong while loading your recipes. Please try again later.',
   },
 });

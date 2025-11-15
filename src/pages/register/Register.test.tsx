@@ -117,6 +117,57 @@ describe('Register', () => {
     expect(userService.createUser).not.toHaveBeenCalled();
   });
 
+  it('shows an error alert when registration fails', async () => {
+    const errorMessage = 'Registration failed';
+    (userService.createUser as ReturnType<typeof vi.fn>).mockRejectedValue({
+      response: {
+        data: {
+          error: errorMessage,
+        },
+      },
+    });
+
+    renderWithProviders(
+      <BrowserRouter>
+        <Register />
+      </BrowserRouter>
+    );
+
+    const emailInput = screen.getByPlaceholderText(/enter your email/i);
+    await user.type(emailInput, 'test@example.com');
+
+    const continueButton = screen.getByRole('button', { name: /continue/i });
+    await user.click(continueButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/show me what i can cook!/i)).toBeInTheDocument();
+    });
+
+    const firstInput = screen.getByPlaceholderText(/search for an ingredient/i);
+    await user.type(firstInput, 'tomato');
+
+    await waitFor(
+      () => {
+        expect(screen.getByText('Tomato')).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
+
+    const tomatoOption = screen.getByText('Tomato');
+    await user.click(tomatoOption);
+
+    await waitFor(() => {
+      expect(firstInput).toHaveValue('Tomato');
+    });
+
+    const completeButton = screen.getByRole('button', { name: /show me what i can cook!/i });
+    await user.click(completeButton);
+
+    await waitFor(() => {
+      expect(window.alert).toHaveBeenCalledWith(errorMessage);
+    });
+  });
+
   it('confirms that the user can register once a valid email and at least one ingredient is provided', async () => {
     (ingredientService.getIngredients as ReturnType<typeof vi.fn>).mockImplementation(
       async (params: {

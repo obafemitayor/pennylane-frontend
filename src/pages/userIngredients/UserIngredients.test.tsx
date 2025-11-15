@@ -49,6 +49,27 @@ describe('UserIngredients', () => {
     window.alert = vi.fn();
   });
 
+  it('displays an error message when fetching user ingredients fails', async () => {
+    const errorMessage = 'Failed to fetch user ingredients';
+    (userIngredientService.getUserIngredients as ReturnType<typeof vi.fn>).mockRejectedValue({
+      response: {
+        data: {
+          error: errorMessage,
+        },
+      },
+    });
+
+    renderWithProviders(
+      <BrowserRouter>
+        <UserIngredients />
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(errorMessage)).toBeInTheDocument();
+    });
+  });
+
   it('displays a list of user ingredients', async () => {
     renderWithProviders(
       <BrowserRouter>

@@ -69,7 +69,15 @@ export const UserIngredients: React.FC = () => {
           </Button>
         </HStack>
 
-        {!isAddingIngredient ? (
+        {isAddingIngredient && (
+          <AddIngredient
+            userId={userIdNumber}
+            onCancel={handleCancelAddNewIngredients}
+            onSave={handleSaveNewIngredients}
+          />
+        )}
+
+        {!isAddingIngredient && (
           <>
             <Button onClick={addNewIngredient} colorPalette="blue" w="fit-content">
               {intl.formatMessage(messages.addIngredient)}
@@ -98,12 +106,6 @@ export const UserIngredients: React.FC = () => {
               </HStack>
             )}
           </>
-        ) : (
-          <AddIngredient
-            userId={userIdNumber}
-            onCancel={handleCancelAddNewIngredients}
-            onSave={handleSaveNewIngredients}
-          />
         )}
       </VStack>
     </Container>

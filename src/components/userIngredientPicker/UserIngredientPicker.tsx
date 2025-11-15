@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { MdDelete } from 'react-icons/md';
 import { useListCollection } from '@ark-ui/react';
-import type { Ingredient, UserIngredientStepInput } from '../../types';
+import type { Ingredient, UserIngredientPickerInput } from '../../types';
 import { useIngredients } from '../../hooks/useIngredients';
 import { messages } from './messages';
 
@@ -30,8 +30,8 @@ interface IngredientsSelectProps {
 }
 
 interface UserIngredientPickerProps {
-  userIngredients: UserIngredientStepInput[];
-  setUserIngredients: React.Dispatch<React.SetStateAction<UserIngredientStepInput[]>>;
+  userIngredients: UserIngredientPickerInput[];
+  setUserIngredients: React.Dispatch<React.SetStateAction<UserIngredientPickerInput[]>>;
   allowMultiple?: boolean;
 }
 

@@ -1,7 +1,7 @@
-import type { UserIngredientStepInput, UserIngredientsPayload } from '../../types';
+import type { UserIngredientPickerInput, UserIngredientsPayload } from '../../types';
 
 export const buildUserIngredientsPayload = (
-  userIngredients: UserIngredientStepInput[]
+  userIngredients: UserIngredientPickerInput[]
 ): UserIngredientsPayload => {
   return userIngredients.reduce(
     (acc, input) => {

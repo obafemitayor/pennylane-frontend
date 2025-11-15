@@ -6,6 +6,7 @@ import { messages as recipeDetailsMessages } from '../pages/recipeDetails/messag
 import { messages as userIngredientsPageMessages } from '../pages/userIngredients/messages';
 import { messages as addIngredientMessages } from '../pages/userIngredients/components/AddIngredient/messages';
 import { messages as ingredientListMessages } from '../pages/userIngredients/components/IngredientList/messages';
+import { messages as editIngredientModalMessages } from '../pages/userIngredients/components/EditIngredientModal/messages';
 
 export const allMessages = {
   en: {
@@ -17,5 +18,6 @@ export const allMessages = {
     ...userIngredientsPageMessages,
     ...addIngredientMessages,
     ...ingredientListMessages,
+    ...editIngredientModalMessages,
   },
 };

@@ -8,8 +8,4 @@ export const localStorageUtils = {
   setUserEmail: (email: string): void => {
     localStorage.setItem(USER_EMAIL_KEY, email);
   },
-
-  removeUserEmail: (): void => {
-    localStorage.removeItem(USER_EMAIL_KEY);
-  },
 };

@@ -73,7 +73,7 @@ export interface UserIngredientsResponse {
   has_more: boolean;
 }
 
-export interface UserIngredientStepInput {
+export interface UserIngredientPickerInput {
   id: string;
   selectedIngredient: Ingredient | null;
 }

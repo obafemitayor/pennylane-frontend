@@ -5,7 +5,7 @@ import { Button, VStack, HStack, Text } from '@chakra-ui/react';
 import { UserIngredientPicker } from '../../../../components/userIngredientPicker/UserIngredientPicker';
 import { userIngredientService } from '../../../../services/userIngredientService';
 import { buildUserIngredientsPayload } from '../../../utils/utils';
-import type { UserIngredientStepInput } from '../../../../types';
+import type { UserIngredientPickerInput } from '../../../../types';
 import { messages } from './messages';
 
 interface AddIngredientProps {
@@ -16,7 +16,7 @@ interface AddIngredientProps {
 
 export const AddIngredient: React.FC<AddIngredientProps> = ({ userId, onSave, onCancel }) => {
   const intl = useIntl();
-  const [userIngredients, setUserIngredients] = useState<UserIngredientStepInput[]>([
+  const [userIngredients, setUserIngredients] = useState<UserIngredientPickerInput[]>([
     {
       id: '1',
       selectedIngredient: null,

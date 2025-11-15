@@ -25,24 +25,8 @@ export const messages = defineMessages({
     id: 'userIngredients.ingredientList.confirmDelete',
     defaultMessage: 'Are you sure you want to remove this ingredient?',
   },
-  failedToUpdate: {
-    id: 'userIngredients.ingredientList.failedToUpdate',
-    defaultMessage: 'Failed to update ingredient',
-  },
   failedToDelete: {
     id: 'userIngredients.ingredientList.failedToDelete',
     defaultMessage: 'Failed to delete ingredient',
-  },
-  saveChanges: {
-    id: 'userIngredients.ingredientList.saveChanges',
-    defaultMessage: 'Save Changes',
-  },
-  confirmUpdate: {
-    id: 'userIngredients.ingredientList.confirmUpdate',
-    defaultMessage: 'Are you sure you want to update this ingredient?',
-  },
-  cancel: {
-    id: 'userIngredients.ingredientList.cancel',
-    defaultMessage: 'Cancel',
   },
 });

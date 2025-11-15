@@ -29,10 +29,6 @@ export const messages = defineMessages({
     id: 'recipeDetails.ingredients',
     defaultMessage: 'Ingredients',
   },
-  missingIngredients: {
-    id: 'recipeDetails.missingIngredients',
-    defaultMessage: 'Missing Ingredients',
-  },
   allIngredientsAvailable: {
     id: 'recipeDetails.allIngredientsAvailable',
     defaultMessage: "You're all set, you've got every ingredient you need for this recipe 👌",

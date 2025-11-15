@@ -5,7 +5,7 @@ import type { AxiosError } from 'axios';
 import { Button, VStack, Text, Box, Heading } from '@chakra-ui/react';
 import { AddEmailStep } from './steps/AddEmailStep';
 import { UserIngredientPicker } from '../../components/userIngredientPicker/UserIngredientPicker';
-import type { UserIngredientStepInput } from '../../types';
+import type { UserIngredientPickerInput } from '../../types';
 import { userService } from '../../services/userService';
 import { buildUserIngredientsPayload } from '../utils/utils';
 import { localStorageUtils } from '../../utils/localStorage';
@@ -16,7 +16,7 @@ export const Register: React.FC = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState<'email' | 'ingredients'>('email');
   const [email, setEmail] = useState('');
-  const [userIngredients, setUserIngredients] = useState<UserIngredientStepInput[]>([
+  const [userIngredients, setUserIngredients] = useState<UserIngredientPickerInput[]>([
     {
       id: '1',
       selectedIngredient: null,

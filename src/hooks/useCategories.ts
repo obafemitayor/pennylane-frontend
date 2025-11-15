@@ -59,7 +59,5 @@ export const useCategories = () => {
     loading,
     error,
     searchCategories,
-    reset,
-    fetchCategories,
   };
 };
