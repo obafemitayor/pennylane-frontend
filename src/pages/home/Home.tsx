@@ -84,7 +84,7 @@ export const Home: React.FC = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  // Doing Client-Side Pagination because the API returns a maximum of 50 recipes.
+  // Doing Client-Side Pagination because the API returns a maximum of 100 recipes.
   const { currentRecipes, totalPages } = paginateRecipes(recipes, currentPage, itemsPerPage);
 
   useEffect(() => {

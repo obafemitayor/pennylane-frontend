@@ -1,9 +1,5 @@
 import api from './api';
-
-export interface Cuisine {
-  id: number;
-  name: string;
-}
+import type { Cuisine } from '../types';
 
 export interface CuisinesResponse {
   cuisines: Cuisine[];

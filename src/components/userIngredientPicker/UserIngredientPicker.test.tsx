@@ -6,7 +6,7 @@ import { UserIngredientPicker } from './UserIngredientPicker';
 import { messages } from './messages';
 import type { Ingredient, UserIngredientPickerInput } from '../../types';
 import { renderWithProviders } from '../../test/testUtils';
-import { ingredientService } from '../../services/ingredientService';
+import { ingredientService, type IngredientsParams } from '../../services/ingredientService';
 
 vi.mock('../../services/ingredientService', () => ({
   ingredientService: {
@@ -22,8 +22,10 @@ describe('UserIngredientPicker', () => {
     vi.clearAllMocks();
     mockGetIngredients.mockResolvedValue({
       ingredients: [],
-      has_more_next: false,
-      next_cursor: null,
+      total: 0,
+      offset: 0,
+      limit: 200,
+      has_more: false,
     });
   });
 
@@ -37,31 +39,28 @@ describe('UserIngredientPicker', () => {
 
   it('displays search results when user types a query', async () => {
     const setUserIngredients = vi.fn();
-    mockGetIngredients.mockImplementation(
-      async (params: {
-        query?: string;
-        pageSize?: number;
-        nextCursor?: number;
-        previousCursor?: number;
-      }) => {
-        const query = params.query?.toLowerCase() || '';
-        if (query === 'yam') {
-          return {
-            ingredients: [],
-            has_more_next: false,
-            next_cursor: null,
-          };
-        }
+    mockGetIngredients.mockImplementation(async (params?: IngredientsParams) => {
+      const query = params?.query?.toLowerCase() || '';
+      if (query === 'yam') {
         return {
-          ingredients: [
-            { id: 1, name: 'Tomato' },
-            { id: 2, name: 'Onion' },
-          ],
-          has_more_next: false,
-          next_cursor: null,
+          ingredients: [],
+          total: 0,
+          offset: 0,
+          limit: 200,
+          has_more: false,
         };
       }
-    );
+      return {
+        ingredients: [
+          { id: 1, name: 'Tomato' },
+          { id: 2, name: 'Onion' },
+        ],
+        total: 2,
+        offset: 0,
+        limit: 200,
+        has_more: false,
+      };
+    });
 
     renderWithProviders(
       <UserIngredientPicker
@@ -102,8 +101,10 @@ describe('UserIngredientPicker', () => {
     };
     mockGetIngredients.mockResolvedValue({
       ingredients: [],
-      has_more_next: false,
-      next_cursor: null,
+      total: 0,
+      offset: 0,
+      limit: 200,
+      has_more: false,
     });
 
     renderWithProviders(<TestWrapper />);
@@ -155,8 +156,10 @@ describe('UserIngredientPicker', () => {
 
     mockGetIngredients.mockResolvedValue({
       ingredients: [existingIngredient],
-      has_more_next: false,
-      next_cursor: null,
+      total: 1,
+      offset: 0,
+      limit: 200,
+      has_more: false,
     });
 
     renderWithProviders(<TestWrapper />);
@@ -208,8 +211,10 @@ describe('UserIngredientPicker', () => {
         { id: 1, name: 'Tomato' },
         { id: 2, name: 'Onion' },
       ],
-      has_more_next: false,
-      next_cursor: null,
+      total: 2,
+      offset: 0,
+      limit: 200,
+      has_more: false,
     });
 
     renderWithProviders(<TestWrapper />);
@@ -284,28 +289,25 @@ describe('UserIngredientPicker', () => {
         />
       );
     };
-    mockGetIngredients.mockImplementation(
-      async (params: {
-        query?: string;
-        pageSize?: number;
-        nextCursor?: number;
-        previousCursor?: number;
-      }) => {
-        const query = params.query?.toLowerCase() || '';
-        if (query === 'newingredient') {
-          return {
-            ingredients: [],
-            has_more_next: false,
-            next_cursor: null,
-          };
-        }
+    mockGetIngredients.mockImplementation(async (params?: IngredientsParams) => {
+      const query = params?.query?.toLowerCase() || '';
+      if (query === 'newingredient') {
         return {
-          ingredients: [{ id: 1, name: 'Tomato' }],
-          has_more_next: false,
-          next_cursor: null,
+          ingredients: [],
+          total: 0,
+          offset: 0,
+          limit: 200,
+          has_more: false,
         };
       }
-    );
+      return {
+        ingredients: [{ id: 1, name: 'Tomato' }],
+        total: 1,
+        offset: 0,
+        limit: 200,
+        has_more: false,
+      };
+    });
 
     renderWithProviders(<TestWrapper />);
 

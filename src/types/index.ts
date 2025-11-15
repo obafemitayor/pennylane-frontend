@@ -10,10 +10,10 @@ export interface Ingredient {
 
 export interface IngredientsResponse {
   ingredients: Ingredient[];
-  has_more_next: boolean;
-  has_more_previous: boolean;
-  next_cursor: number | null;
-  previous_cursor: number | null;
+  total: number;
+  offset: number;
+  limit: number;
+  has_more: boolean;
 }
 
 export interface Recipe {

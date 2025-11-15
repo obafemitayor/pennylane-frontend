@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { AxiosError } from 'axios';
 import { categoryService } from '../services/categoryService';
 import type { Category, CategoriesParams } from '../types';
@@ -11,6 +11,14 @@ export const useCategories = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const fetchCategories = useCallback(async (query?: string, offset: number = 0) => {
     setLoading(true);

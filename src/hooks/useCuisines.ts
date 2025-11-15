@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { AxiosError } from 'axios';
 import { cuisineService } from '../services/cuisineService';
-import type { Cuisine } from '../services/cuisineService';
+import type { Cuisine } from '../types';
 
 export const useCuisines = () => {
   const [cuisines, setCuisines] = useState<Cuisine[]>([]);

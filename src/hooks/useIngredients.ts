@@ -1,13 +1,7 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { AxiosError } from 'axios';
-import { ingredientService } from '../services/ingredientService';
+import { ingredientService, type IngredientsParams } from '../services/ingredientService';
 import type { Ingredient, IngredientsResponse } from '../types';
-
-type IngredientsParams = {
-  query?: string;
-  pageSize: number;
-  nextCursor?: number;
-};
 
 const DEBOUNCE_DELAY = 300;
 // I am deliberately making an assumption that the ingredient the user wants
@@ -22,13 +16,21 @@ export const useIngredients = () => {
   const [error, setError] = useState<string | null>(null);
   const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const fetchIngredients = useCallback(async (query: string) => {
     setLoading(true);
     setError(null);
 
     try {
       const params: IngredientsParams = {
-        query: query || undefined,
+        query: query,
         pageSize: PAGE_SIZE,
       };
       const response: IngredientsResponse = await ingredientService.getIngredients(params);
