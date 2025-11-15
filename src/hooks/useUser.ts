@@ -16,7 +16,7 @@ export const useUser = () => {
       const userData = await userService.getUserByEmail(email);
       setUser(userData);
       return userData;
-    } catch (err) {
+    } catch (err: unknown) {
       const axiosError = err as AxiosError<{ error?: string }>;
       const errorMessage = axiosError.response?.data?.error || 'Failed to fetch user';
       setError(errorMessage);

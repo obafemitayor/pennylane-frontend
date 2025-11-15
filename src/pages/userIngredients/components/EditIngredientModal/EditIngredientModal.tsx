@@ -57,7 +57,7 @@ export const EditIngredientModal: React.FC<EditIngredientModalProps> = ({
       await updateIngredient(currentIngredient.id, updatedIngredientPayload);
       onClose();
       window.location.reload();
-    } catch (err) {
+    } catch (err: unknown) {
       const error = err instanceof Error ? err : new Error(String(err));
       alert(error.message || intl.formatMessage(messages.failedToUpdate));
     }

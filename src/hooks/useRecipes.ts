@@ -15,7 +15,7 @@ export const useRecipes = () => {
     try {
       const recipesData = await recipeService.findMostRelevantRecipes(userId, filters);
       setRecipes(recipesData);
-    } catch (err) {
+    } catch (err: unknown) {
       const axiosError = err as AxiosError<{ error?: string }>;
       setError(axiosError.response?.data?.error || 'Failed to fetch recipes');
       setRecipes([]);

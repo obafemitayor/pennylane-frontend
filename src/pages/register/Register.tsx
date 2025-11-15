@@ -46,7 +46,7 @@ export const Register: React.FC = () => {
       });
       localStorageUtils.setUserEmail(email);
       navigate(`/home/${email}`);
-    } catch (err) {
+    } catch (err: unknown) {
       const axiosError = err as AxiosError<{ error?: string }>;
       console.error('Failed to save ingredients:', err);
       alert(axiosError.response?.data?.error || intl.formatMessage(messages.registrationFailed));

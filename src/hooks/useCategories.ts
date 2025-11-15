@@ -32,7 +32,7 @@ export const useCategories = () => {
       };
       const response = await categoryService.getCategories(params);
       setCategories(response.categories);
-    } catch (err) {
+    } catch (err: unknown) {
       const axiosError = err as AxiosError<{ error?: string }>;
       setError(axiosError.response?.data?.error || 'Failed to fetch categories');
       setCategories([]);

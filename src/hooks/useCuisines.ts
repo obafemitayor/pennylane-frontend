@@ -14,7 +14,7 @@ export const useCuisines = () => {
     try {
       const cuisinesData = await cuisineService.getAllCuisines();
       setCuisines(cuisinesData);
-    } catch (err) {
+    } catch (err: unknown) {
       const axiosError = err as AxiosError<{ error?: string }>;
       setError(axiosError.response?.data?.error || 'Failed to fetch cuisines');
       setCuisines([]);

@@ -29,7 +29,7 @@ export const useUserIngredients = (userId: number | undefined) => {
         setIngredients(response.ingredients);
         setHasMore(response.has_more);
         setCurrentOffset(response.offset);
-      } catch (err) {
+      } catch (err: unknown) {
         const axiosError = err as AxiosError<{ error?: string }>;
         setError(
           axiosError.response?.data?.error || intl.formatMessage({ id: 'pantry.failedToLoad' })
@@ -64,7 +64,7 @@ export const useUserIngredients = (userId: number | undefined) => {
     setLoading(true);
     try {
       await userIngredientService.updateIngredient(userId, ingredientId, ingredient);
-    } catch (err) {
+    } catch (err: unknown) {
       const axiosError = err as AxiosError<{ error?: string }>;
       throw new Error(
         axiosError.response?.data?.error || intl.formatMessage({ id: 'pantry.failedToUpdate' })
@@ -81,7 +81,7 @@ export const useUserIngredients = (userId: number | undefined) => {
     setLoading(true);
     try {
       await userIngredientService.removeIngredients(userId, [ingredientId]);
-    } catch (err) {
+    } catch (err: unknown) {
       const axiosError = err as AxiosError<{ error?: string }>;
       throw new Error(
         axiosError.response?.data?.error || intl.formatMessage({ id: 'pantry.failedToDelete' })

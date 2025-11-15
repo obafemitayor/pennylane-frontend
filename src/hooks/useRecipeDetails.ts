@@ -15,7 +15,7 @@ export const useRecipeDetails = () => {
     try {
       const recipeData = await recipeService.getRecipeDetails(userId, recipeId);
       setRecipe(recipeData);
-    } catch (err) {
+    } catch (err: unknown) {
       const axiosError = err as AxiosError<{ error?: string }>;
       setError(axiosError.response?.data?.error || 'Failed to fetch recipe details');
       setRecipe(null);

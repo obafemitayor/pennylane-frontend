@@ -42,7 +42,7 @@ export const AddIngredient: React.FC<AddIngredientProps> = ({ userId, onSave, on
         ingredientsNotInDB,
       });
       onSave();
-    } catch (err) {
+    } catch (err: unknown) {
       const axiosError = err as AxiosError<{ error?: string }>;
       console.error('Failed to save ingredients:', err);
       alert(axiosError.response?.data?.error || intl.formatMessage(messages.failedToAdd));

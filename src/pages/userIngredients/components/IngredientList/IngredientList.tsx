@@ -35,7 +35,7 @@ export const IngredientList: React.FC<IngredientListProps> = ({ userId, userIngr
     try {
       await deleteIngredient(ingredientId);
       window.location.reload();
-    } catch (err) {
+    } catch (err: unknown) {
       const error = err instanceof Error ? err : new Error(String(err));
       alert(error.message || intl.formatMessage(messages.failedToDelete));
     }

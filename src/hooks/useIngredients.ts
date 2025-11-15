@@ -39,7 +39,7 @@ export const useIngredients = () => {
         name: `Add "${query}" as an ingredient`,
       });
       setIngredients(response.ingredients);
-    } catch (err) {
+    } catch (err: unknown) {
       const axiosError = err as AxiosError<{ error?: string }>;
       setError(axiosError.response?.data?.error || 'Failed to fetch ingredients');
       setIngredients([]);
