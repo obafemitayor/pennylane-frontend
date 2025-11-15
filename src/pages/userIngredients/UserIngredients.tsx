@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useIntl } from 'react-intl';
-import {
-  Container,
-  Heading,
-  Spinner,
-  Text,
-  VStack,
-  HStack,
-  Button,
-} from '@chakra-ui/react';
+import { Container, Heading, Spinner, Text, VStack, HStack, Button } from '@chakra-ui/react';
 import { useUserIngredients } from '../../hooks/useUserIngredients';
 import { IngredientList } from './components/IngredientList/IngredientList';
 import { AddIngredient } from './components/AddIngredient/AddIngredient';
@@ -47,7 +39,9 @@ export const UserIngredients: React.FC = () => {
   if (error) {
     return (
       <Container centerContent>
-        <Text color="red.500" mt={8}>{error}</Text>
+        <Text color="red.500" mt={8}>
+          {error}
+        </Text>
       </Container>
     );
   }
@@ -77,18 +71,11 @@ export const UserIngredients: React.FC = () => {
 
         {!isAddingIngredient ? (
           <>
-            <Button
-              onClick={addNewIngredient}
-              colorPalette="blue"
-              w="fit-content"
-            >
+            <Button onClick={addNewIngredient} colorPalette="blue" w="fit-content">
               {intl.formatMessage(messages.addIngredient)}
             </Button>
 
-            <IngredientList
-              userIngredientsList={ingredients}
-              userId={userIdNumber}
-            />
+            <IngredientList userIngredientsList={ingredients} userId={userIdNumber} />
 
             {(hasMore || hasPrevious) && (
               <HStack justify="center" gap={2}>

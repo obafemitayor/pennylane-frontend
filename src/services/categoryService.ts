@@ -7,4 +7,3 @@ export const categoryService = {
     return response.data;
   },
 };
-

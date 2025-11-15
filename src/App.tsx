@@ -19,12 +19,7 @@ function App() {
 
   if (isChecking) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minH="100vh"
-      >
+      <Box display="flex" justifyContent="center" alignItems="center" minH="100vh">
         <Spinner size="xl" />
       </Box>
     );
@@ -34,13 +29,7 @@ function App() {
     <Routes>
       <Route
         path="/"
-        element={
-          userEmail ? (
-            <Navigate to={`/home/${userEmail}`} replace />
-          ) : (
-            <Register />
-          )
-        }
+        element={userEmail ? <Navigate to={`/home/${userEmail}`} replace /> : <Register />}
       />
       <Route path="/register" element={<Register />} />
       <Route path="/home/:email" element={<Home />} />

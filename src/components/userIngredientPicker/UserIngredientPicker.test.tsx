@@ -30,17 +30,20 @@ describe('UserIngredientPicker', () => {
   it('renders the component with empty userIngredients list', () => {
     const setUserIngredients = vi.fn();
     renderWithProviders(
-      <UserIngredientPicker
-        userIngredients={[]}
-        setUserIngredients={setUserIngredients}
-      />
+      <UserIngredientPicker userIngredients={[]} setUserIngredients={setUserIngredients} />
     );
     expect(screen.getByText(messages.title.defaultMessage)).toBeInTheDocument();
   });
 
   it('displays search results when user types a query', async () => {
-      const setUserIngredients = vi.fn();
-      mockGetIngredients.mockImplementation(async (params: any) => {
+    const setUserIngredients = vi.fn();
+    mockGetIngredients.mockImplementation(
+      async (params: {
+        query?: string;
+        pageSize?: number;
+        nextCursor?: number;
+        previousCursor?: number;
+      }) => {
         const query = params.query?.toLowerCase() || '';
         if (query === 'yam') {
           return {
@@ -57,200 +60,237 @@ describe('UserIngredientPicker', () => {
           has_more_next: false,
           next_cursor: null,
         };
-      });
+      }
+    );
 
-      renderWithProviders(
-        <UserIngredientPicker
-          userIngredients={[{ id: '1', selectedIngredient: null }]}
-          setUserIngredients={setUserIngredients}
-        />
-      );
-      const input = screen.getByPlaceholderText(messages.searchPlaceholder.defaultMessage);
-      await user.type(input, 'yam');
-      await waitFor(() => {
+    renderWithProviders(
+      <UserIngredientPicker
+        userIngredients={[{ id: '1', selectedIngredient: null }]}
+        setUserIngredients={setUserIngredients}
+      />
+    );
+    const input = screen.getByPlaceholderText(messages.searchPlaceholder.defaultMessage);
+    await user.type(input, 'yam');
+    await waitFor(
+      () => {
         expect(mockGetIngredients).toHaveBeenCalled();
         expect(screen.getByText(`Add "yam" as an ingredient`)).toBeInTheDocument();
-      }, { timeout: 3000 });
+      },
+      { timeout: 3000 }
+    );
   });
 
   it('displays a new ingredient in the input field when selected"', async () => {
-      const initialUserIngredients: UserIngredientStepInput[] = [{ id: '1', selectedIngredient: null }];
-      const userIngredientsRef = { current: initialUserIngredients };
-      const TestWrapper = () => {
-        const [userIngredients, setUserIngredients] = useState<UserIngredientStepInput[]>(initialUserIngredients);
-        
-        useEffect(() => {
-          userIngredientsRef.current = userIngredients;
-        }, [userIngredients]);
-        
-        return (
-          <UserIngredientPicker
-            userIngredients={userIngredients}
-            setUserIngredients={setUserIngredients}
-          />
-        );
-      };
-      mockGetIngredients.mockResolvedValue({
-        ingredients: [],
-        has_more_next: false,
-        next_cursor: null,
-      });
+    const initialUserIngredients: UserIngredientStepInput[] = [
+      { id: '1', selectedIngredient: null },
+    ];
+    const userIngredientsRef = { current: initialUserIngredients };
+    const TestWrapper = () => {
+      const [userIngredients, setUserIngredients] =
+        useState<UserIngredientStepInput[]>(initialUserIngredients);
 
-      renderWithProviders(<TestWrapper />);
+      useEffect(() => {
+        userIngredientsRef.current = userIngredients;
+      }, [userIngredients]);
 
-      const input = screen.getByPlaceholderText(messages.searchPlaceholder.defaultMessage);
-      await user.type(input, 'newingredient');
-      
-      await waitFor(() => {
+      return (
+        <UserIngredientPicker
+          userIngredients={userIngredients}
+          setUserIngredients={setUserIngredients}
+        />
+      );
+    };
+    mockGetIngredients.mockResolvedValue({
+      ingredients: [],
+      has_more_next: false,
+      next_cursor: null,
+    });
+
+    renderWithProviders(<TestWrapper />);
+
+    const input = screen.getByPlaceholderText(messages.searchPlaceholder.defaultMessage);
+    await user.type(input, 'newingredient');
+
+    await waitFor(
+      () => {
         expect(screen.getByText('Add "newingredient" as an ingredient')).toBeInTheDocument();
-      }, { timeout: 3000 });
-      const addAsIngredientOption = screen.getByText('Add "newingredient" as an ingredient');
-      await user.click(addAsIngredientOption);
-      await waitFor(() => {
-        const hasIngredient = userIngredientsRef.current.some(
-          (item) => item.selectedIngredient?.name === 'newingredient'
-        );
-        expect(hasIngredient).toBe(true);
-      });
+      },
+      { timeout: 3000 }
+    );
+    const addAsIngredientOption = screen.getByText('Add "newingredient" as an ingredient');
+    await user.click(addAsIngredientOption);
+    await waitFor(() => {
+      const hasIngredient = userIngredientsRef.current.some(
+        (item) => item.selectedIngredient?.name === 'newingredient'
+      );
+      expect(hasIngredient).toBe(true);
+    });
   });
 
   it('displays an existing ingredient in the input field when selected', async () => {
-      const initialUserIngredients: UserIngredientStepInput[] = [{ id: '1', selectedIngredient: null }];
-      const userIngredientsRef = { current: initialUserIngredients };
-      const TestWrapper = () => {
-        const [userIngredients, setUserIngredients] = useState<UserIngredientStepInput[]>(initialUserIngredients);
-        
-        useEffect(() => {
-          userIngredientsRef.current = userIngredients;
-        }, [userIngredients]);
-        
-        return (
-          <UserIngredientPicker
-            userIngredients={userIngredients}
-            setUserIngredients={setUserIngredients}
-          />
-        );
-      };
-      
-      const existingIngredient: Ingredient = {
-        id: 1,
-        name: 'Tomato',
-      };
+    const initialUserIngredients: UserIngredientStepInput[] = [
+      { id: '1', selectedIngredient: null },
+    ];
+    const userIngredientsRef = { current: initialUserIngredients };
+    const TestWrapper = () => {
+      const [userIngredients, setUserIngredients] =
+        useState<UserIngredientStepInput[]>(initialUserIngredients);
 
-      mockGetIngredients.mockResolvedValue({
-        ingredients: [existingIngredient],
-        has_more_next: false,
-        next_cursor: null,
-      });
+      useEffect(() => {
+        userIngredientsRef.current = userIngredients;
+      }, [userIngredients]);
 
-      renderWithProviders(<TestWrapper />);
+      return (
+        <UserIngredientPicker
+          userIngredients={userIngredients}
+          setUserIngredients={setUserIngredients}
+        />
+      );
+    };
 
-      const input = screen.getByPlaceholderText(messages.searchPlaceholder.defaultMessage);
-      await user.type(input, 'tomato');
-      
-      await waitFor(() => {
+    const existingIngredient: Ingredient = {
+      id: 1,
+      name: 'Tomato',
+    };
+
+    mockGetIngredients.mockResolvedValue({
+      ingredients: [existingIngredient],
+      has_more_next: false,
+      next_cursor: null,
+    });
+
+    renderWithProviders(<TestWrapper />);
+
+    const input = screen.getByPlaceholderText(messages.searchPlaceholder.defaultMessage);
+    await user.type(input, 'tomato');
+
+    await waitFor(
+      () => {
         expect(screen.getByText('Tomato')).toBeInTheDocument();
-      }, { timeout: 3000 });
-      
-      const tomatoOption = screen.getByText('Tomato');
-      await user.click(tomatoOption);
-      
-      await waitFor(() => {
-        const hasIngredient = userIngredientsRef.current.some(
-          (item) => item.selectedIngredient?.name === 'Tomato' && item.selectedIngredient?.id === 1
-        );
-        expect(hasIngredient).toBe(true);
-      });
+      },
+      { timeout: 3000 }
+    );
+
+    const tomatoOption = screen.getByText('Tomato');
+    await user.click(tomatoOption);
+
+    await waitFor(() => {
+      const hasIngredient = userIngredientsRef.current.some(
+        (item) => item.selectedIngredient?.name === 'Tomato' && item.selectedIngredient?.id === 1
+      );
+      expect(hasIngredient).toBe(true);
+    });
   });
 
   it('allows user to add multiple ingredients when allowMultiple is set to true', async () => {
-      const initialUserIngredients: UserIngredientStepInput[] = [{ id: '1', selectedIngredient: null }];
-      const userIngredientsRef = { current: initialUserIngredients };
-      const TestWrapper = () => {
-        const [userIngredients, setUserIngredients] = useState<UserIngredientStepInput[]>(initialUserIngredients);
-        
-        useEffect(() => {
-          userIngredientsRef.current = userIngredients;
-        }, [userIngredients]);
-        
-        return (
-          <UserIngredientPicker
-            userIngredients={userIngredients}
-            setUserIngredients={setUserIngredients}
-            allowMultiple={true}
-          />
-        );
-      };
-      mockGetIngredients.mockResolvedValue({
-        ingredients: [
-          { id: 1, name: 'Tomato' },
-          { id: 2, name: 'Onion' },
-        ],
-        has_more_next: false,
-        next_cursor: null,
-      });
+    const initialUserIngredients: UserIngredientStepInput[] = [
+      { id: '1', selectedIngredient: null },
+    ];
+    const userIngredientsRef = { current: initialUserIngredients };
+    const TestWrapper = () => {
+      const [userIngredients, setUserIngredients] =
+        useState<UserIngredientStepInput[]>(initialUserIngredients);
 
-      renderWithProviders(<TestWrapper />);
+      useEffect(() => {
+        userIngredientsRef.current = userIngredients;
+      }, [userIngredients]);
 
-      const addButton = screen.getByText(messages.addAnotherIngredient.defaultMessage);
-      expect(addButton).toBeInTheDocument();
-      const firstInput = screen.getByPlaceholderText(messages.searchPlaceholder.defaultMessage);
-      await user.type(firstInput, 'tomato');
-      await waitFor(() => {
+      return (
+        <UserIngredientPicker
+          userIngredients={userIngredients}
+          setUserIngredients={setUserIngredients}
+          allowMultiple={true}
+        />
+      );
+    };
+    mockGetIngredients.mockResolvedValue({
+      ingredients: [
+        { id: 1, name: 'Tomato' },
+        { id: 2, name: 'Onion' },
+      ],
+      has_more_next: false,
+      next_cursor: null,
+    });
+
+    renderWithProviders(<TestWrapper />);
+
+    const addButton = screen.getByText(messages.addAnotherIngredient.defaultMessage);
+    expect(addButton).toBeInTheDocument();
+    const firstInput = screen.getByPlaceholderText(messages.searchPlaceholder.defaultMessage);
+    await user.type(firstInput, 'tomato');
+    await waitFor(
+      () => {
         expect(screen.getByText('Tomato')).toBeInTheDocument();
-      }, { timeout: 3000 });
-      await user.click(screen.getByText('Tomato'));
-      await waitFor(() => {
-        expect(userIngredientsRef.current.length).toBe(1);
-        expect(userIngredientsRef.current[0].selectedIngredient?.name).toBe('Tomato');
-        expect(userIngredientsRef.current[0].selectedIngredient?.id).toBe(1);
-      });
+      },
+      { timeout: 3000 }
+    );
+    await user.click(screen.getByText('Tomato'));
+    await waitFor(() => {
+      expect(userIngredientsRef.current.length).toBe(1);
+      expect(userIngredientsRef.current[0].selectedIngredient?.name).toBe('Tomato');
+      expect(userIngredientsRef.current[0].selectedIngredient?.id).toBe(1);
+    });
 
-      await user.click(addButton);
-      await waitFor(() => {
-        expect(userIngredientsRef.current.length).toBe(2);
-      });
-      const inputs = screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage);
-      expect(inputs.length).toBe(2);
-      expect(inputs[0]).toHaveValue('Tomato');
-      expect(inputs[1]).toHaveValue('');
-        await user.type(inputs[1], 'onio');
-        await waitFor(async () => {
-          await user.click(inputs[1]);
-          const onionOptionsAfterClick = screen.getAllByText('Onion');
-          await user.click(onionOptionsAfterClick[onionOptionsAfterClick.length - 1]);
-          expect(userIngredientsRef.current.length).toBe(2);
-          expect(userIngredientsRef.current[0].selectedIngredient?.name).toBe('Tomato');
-          expect(userIngredientsRef.current[0].selectedIngredient?.id).toBe(1);
-          expect(userIngredientsRef.current[1].selectedIngredient?.name).toBe('Onion');
-          expect(userIngredientsRef.current[1].selectedIngredient?.id).toBe(2);
-      
-          expect(screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage).length).toBe(2);
-          expect(screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage)[0]).toHaveValue('Tomato');
-          expect(screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage)[1]).toHaveValue('Onion');
-          expect(screen.getAllByLabelText(messages.removeIngredient.defaultMessage).length).toBe(2);
-        });
+    await user.click(addButton);
+    await waitFor(() => {
+      expect(userIngredientsRef.current.length).toBe(2);
+    });
+    const inputs = screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage);
+    expect(inputs.length).toBe(2);
+    expect(inputs[0]).toHaveValue('Tomato');
+    expect(inputs[1]).toHaveValue('');
+    await user.type(inputs[1], 'onio');
+    await waitFor(async () => {
+      await user.click(inputs[1]);
+      const onionOptionsAfterClick = screen.getAllByText('Onion');
+      await user.click(onionOptionsAfterClick[onionOptionsAfterClick.length - 1]);
+      expect(userIngredientsRef.current.length).toBe(2);
+      expect(userIngredientsRef.current[0].selectedIngredient?.name).toBe('Tomato');
+      expect(userIngredientsRef.current[0].selectedIngredient?.id).toBe(1);
+      expect(userIngredientsRef.current[1].selectedIngredient?.name).toBe('Onion');
+      expect(userIngredientsRef.current[1].selectedIngredient?.id).toBe(2);
+
+      expect(screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage).length).toBe(
+        2
+      );
+      expect(
+        screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage)[0]
+      ).toHaveValue('Tomato');
+      expect(
+        screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage)[1]
+      ).toHaveValue('Onion');
+      expect(screen.getAllByLabelText(messages.removeIngredient.defaultMessage).length).toBe(2);
+    });
   });
 
   it('allows user to select existing ingredient in first input and new ingredient in second input when allowMultiple is set to true', async () => {
-      const initialUserIngredients: UserIngredientStepInput[] = [{ id: '1', selectedIngredient: null }];
-      const userIngredientsRef = { current: initialUserIngredients };
-      const TestWrapper = () => {
-        const [userIngredients, setUserIngredients] = useState<UserIngredientStepInput[]>(initialUserIngredients);
-        
-        useEffect(() => {
-          userIngredientsRef.current = userIngredients;
-        }, [userIngredients]);
-        
-        return (
-          <UserIngredientPicker
-            userIngredients={userIngredients}
-            setUserIngredients={setUserIngredients}
-            allowMultiple={true}
-          />
-        );
-      };
-      mockGetIngredients.mockImplementation(async (params: any) => {
+    const initialUserIngredients: UserIngredientStepInput[] = [
+      { id: '1', selectedIngredient: null },
+    ];
+    const userIngredientsRef = { current: initialUserIngredients };
+    const TestWrapper = () => {
+      const [userIngredients, setUserIngredients] =
+        useState<UserIngredientStepInput[]>(initialUserIngredients);
+
+      useEffect(() => {
+        userIngredientsRef.current = userIngredients;
+      }, [userIngredients]);
+
+      return (
+        <UserIngredientPicker
+          userIngredients={userIngredients}
+          setUserIngredients={setUserIngredients}
+          allowMultiple={true}
+        />
+      );
+    };
+    mockGetIngredients.mockImplementation(
+      async (params: {
+        query?: string;
+        pageSize?: number;
+        nextCursor?: number;
+        previousCursor?: number;
+      }) => {
         const query = params.query?.toLowerCase() || '';
         if (query === 'newingredient') {
           return {
@@ -264,62 +304,76 @@ describe('UserIngredientPicker', () => {
           has_more_next: false,
           next_cursor: null,
         };
-      });
+      }
+    );
 
-      renderWithProviders(<TestWrapper />);
+    renderWithProviders(<TestWrapper />);
 
-      const addButton = screen.getByText(messages.addAnotherIngredient.defaultMessage);
-      expect(addButton).toBeInTheDocument();
-      const firstInput = screen.getByPlaceholderText(messages.searchPlaceholder.defaultMessage);
-      await user.type(firstInput, 'tomato');
-      await waitFor(() => {
+    const addButton = screen.getByText(messages.addAnotherIngredient.defaultMessage);
+    expect(addButton).toBeInTheDocument();
+    const firstInput = screen.getByPlaceholderText(messages.searchPlaceholder.defaultMessage);
+    await user.type(firstInput, 'tomato');
+    await waitFor(
+      () => {
         expect(screen.getByText('Tomato')).toBeInTheDocument();
-      }, { timeout: 3000 });
-      await user.click(screen.getByText('Tomato'));
-      await waitFor(() => {
-        expect(userIngredientsRef.current.length).toBe(1);
-        expect(userIngredientsRef.current[0].selectedIngredient?.name).toBe('Tomato');
-        expect(userIngredientsRef.current[0].selectedIngredient?.id).toBe(1);
-      });
+      },
+      { timeout: 3000 }
+    );
+    await user.click(screen.getByText('Tomato'));
+    await waitFor(() => {
+      expect(userIngredientsRef.current.length).toBe(1);
+      expect(userIngredientsRef.current[0].selectedIngredient?.name).toBe('Tomato');
+      expect(userIngredientsRef.current[0].selectedIngredient?.id).toBe(1);
+    });
 
-      await user.click(addButton);
-      await waitFor(() => {
-        expect(userIngredientsRef.current.length).toBe(2);
-      });
-      const inputs = screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage);
-      expect(inputs.length).toBe(2);
-      expect(inputs[0]).toHaveValue('Tomato');
-      expect(inputs[1]).toHaveValue('');
-      await user.type(inputs[1], 'newingredient');
-      await waitFor(async () => {
-        await user.click(inputs[1]);
-        const options = screen.getAllByText('Add "newingredient" as an ingredient');
-        await user.click(options[options.length - 1]);
-        expect(userIngredientsRef.current.length).toBe(2);
-        expect(userIngredientsRef.current[0].selectedIngredient?.name).toBe('Tomato');
-        expect(userIngredientsRef.current[0].selectedIngredient?.id).toBe(1);
-        expect(userIngredientsRef.current[1].selectedIngredient?.name).toBe('newingredient');
-        expect(userIngredientsRef.current[1].selectedIngredient?.id).toBeNull();
-        expect(screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage).length).toBe(2);
-        expect(screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage)[0]).toHaveValue('Tomato');
-        expect(screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage)[1]).toHaveValue('newingredient');
-        expect(screen.getAllByLabelText(messages.removeIngredient.defaultMessage).length).toBe(2);
-      });
+    await user.click(addButton);
+    await waitFor(() => {
+      expect(userIngredientsRef.current.length).toBe(2);
+    });
+    const inputs = screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage);
+    expect(inputs.length).toBe(2);
+    expect(inputs[0]).toHaveValue('Tomato');
+    expect(inputs[1]).toHaveValue('');
+    await user.type(inputs[1], 'newingredient');
+    await waitFor(async () => {
+      await user.click(inputs[1]);
+      const options = screen.getAllByText('Add "newingredient" as an ingredient');
+      await user.click(options[options.length - 1]);
+      expect(userIngredientsRef.current.length).toBe(2);
+      expect(userIngredientsRef.current[0].selectedIngredient?.name).toBe('Tomato');
+      expect(userIngredientsRef.current[0].selectedIngredient?.id).toBe(1);
+      expect(userIngredientsRef.current[1].selectedIngredient?.name).toBe('newingredient');
+      expect(userIngredientsRef.current[1].selectedIngredient?.id).toBeNull();
+      expect(screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage).length).toBe(
+        2
+      );
+      expect(
+        screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage)[0]
+      ).toHaveValue('Tomato');
+      expect(
+        screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage)[1]
+      ).toHaveValue('newingredient');
+      expect(screen.getAllByLabelText(messages.removeIngredient.defaultMessage).length).toBe(2);
+    });
   });
 
   it('prevents user from adding multiple ingredients when allowMultiple is set to false', () => {
-      const setUserIngredients = vi.fn();
+    const setUserIngredients = vi.fn();
 
-      renderWithProviders(
-        <UserIngredientPicker
-          userIngredients={[{ id: '1', selectedIngredient: null }]}
-          setUserIngredients={setUserIngredients}
-          allowMultiple={false}
-        />
-      );
-      expect(screen.queryByText(messages.addAnotherIngredient.defaultMessage)).not.toBeInTheDocument();
-      expect(screen.queryByLabelText(messages.removeIngredient.defaultMessage)).not.toBeInTheDocument();
-      const inputs = screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage);
-      expect(inputs.length).toBe(1);
+    renderWithProviders(
+      <UserIngredientPicker
+        userIngredients={[{ id: '1', selectedIngredient: null }]}
+        setUserIngredients={setUserIngredients}
+        allowMultiple={false}
+      />
+    );
+    expect(
+      screen.queryByText(messages.addAnotherIngredient.defaultMessage)
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByLabelText(messages.removeIngredient.defaultMessage)
+    ).not.toBeInTheDocument();
+    const inputs = screen.getAllByPlaceholderText(messages.searchPlaceholder.defaultMessage);
+    expect(inputs.length).toBe(1);
   });
 });

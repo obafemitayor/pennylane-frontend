@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import type { AxiosError } from 'axios';
 import { cuisineService } from '../services/cuisineService';
 import type { Cuisine } from '../services/cuisineService';
 
@@ -13,8 +14,9 @@ export const useCuisines = () => {
     try {
       const cuisinesData = await cuisineService.getAllCuisines();
       setCuisines(cuisinesData);
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to fetch cuisines');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ error?: string }>;
+      setError(axiosError.response?.data?.error || 'Failed to fetch cuisines');
       setCuisines([]);
     } finally {
       setLoading(false);
@@ -32,4 +34,3 @@ export const useCuisines = () => {
     fetchCuisines,
   };
 };
-

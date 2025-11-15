@@ -25,7 +25,7 @@ const user = userEvent.setup();
 describe('UserIngredients', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (userIngredientService.getUserIngredients as any).mockResolvedValue({
+    (userIngredientService.getUserIngredients as ReturnType<typeof vi.fn>).mockResolvedValue({
       ingredients: [
         { id: 1, ingredient_id: 1, ingredient: { id: 1, name: 'salt' } },
         { id: 2, ingredient_id: 2, ingredient: { id: 2, name: 'pepper' } },
@@ -35,10 +35,14 @@ describe('UserIngredients', () => {
       offset: 0,
       limit: 10,
     });
-    (userIngredientService.addIngredients as any).mockResolvedValue(undefined);
-    (userIngredientService.updateIngredient as any).mockResolvedValue(undefined);
-    (userIngredientService.removeIngredients as any).mockResolvedValue(undefined);
-    (ingredientService.getIngredients as any).mockResolvedValue({
+    (userIngredientService.addIngredients as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+    (userIngredientService.updateIngredient as ReturnType<typeof vi.fn>).mockResolvedValue(
+      undefined
+    );
+    (userIngredientService.removeIngredients as ReturnType<typeof vi.fn>).mockResolvedValue(
+      undefined
+    );
+    (ingredientService.getIngredients as ReturnType<typeof vi.fn>).mockResolvedValue({
       ingredients: [],
     });
     window.confirm = vi.fn(() => true);
@@ -59,7 +63,7 @@ describe('UserIngredients', () => {
   });
 
   it('pagination works as expected', async () => {
-    (userIngredientService.getUserIngredients as any)
+    (userIngredientService.getUserIngredients as ReturnType<typeof vi.fn>)
       .mockResolvedValueOnce({
         ingredients: [
           { id: 1, ingredient_id: 1, ingredient: { id: 1, name: 'salt' } },
@@ -145,7 +149,7 @@ describe('UserIngredients', () => {
     });
 
     const allButtons = screen.getAllByRole('button');
-    const saveButton = allButtons.find(btn => btn.textContent === 'Save Changes');
+    const saveButton = allButtons.find((btn) => btn.textContent === 'Save Changes');
     if (saveButton) {
       await user.click(saveButton);
     }
@@ -156,7 +160,7 @@ describe('UserIngredients', () => {
   });
 
   it('shows the ingredient to be edidted as well as the save changes and cancel buttons when user clicks on edit ingredient', async () => {
-    (ingredientService.getIngredients as any).mockResolvedValue({
+    (ingredientService.getIngredients as ReturnType<typeof vi.fn>).mockResolvedValue({
       ingredients: [{ id: 3, name: 'Tomato' }],
     });
 
@@ -183,9 +187,12 @@ describe('UserIngredients', () => {
     const input = screen.getByPlaceholderText(/search for an ingredient/i);
     await user.type(input, 'tomato');
 
-    await waitFor(() => {
-      expect(screen.getByText('Tomato')).toBeInTheDocument();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.getByText('Tomato')).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
 
     const tomatoOption = screen.getByText('Tomato');
     await user.click(tomatoOption);
@@ -195,7 +202,7 @@ describe('UserIngredients', () => {
     });
 
     const allButtons = screen.getAllByRole('button');
-    const saveButton = allButtons.find(btn => btn.textContent === 'Save Changes');
+    const saveButton = allButtons.find((btn) => btn.textContent === 'Save Changes');
     if (saveButton) {
       await user.click(saveButton);
     }
@@ -247,7 +254,7 @@ describe('UserIngredients', () => {
 
   it('successfully edits an ingredient when user clicks on save changes', async () => {
     const ingredientToEdit = 'salt';
-    (ingredientService.getIngredients as any).mockResolvedValue({
+    (ingredientService.getIngredients as ReturnType<typeof vi.fn>).mockResolvedValue({
       ingredients: [{ id: 4, name: 'Onion' }],
     });
 
@@ -280,9 +287,12 @@ describe('UserIngredients', () => {
     await user.clear(input);
     await user.type(input, 'onion');
 
-    await waitFor(() => {
-      expect(screen.getByText('Onion')).toBeInTheDocument();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.getByText('Onion')).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
 
     const onionOption = screen.getByText('Onion');
     await user.click(onionOption);
@@ -295,7 +305,10 @@ describe('UserIngredients', () => {
     await user.click(saveButton);
 
     await waitFor(() => {
-      expect(userIngredientService.updateIngredient).toHaveBeenCalledWith(1, 1, { id: 4, name: 'Onion' });
+      expect(userIngredientService.updateIngredient).toHaveBeenCalledWith(1, 1, {
+        id: 4,
+        name: 'Onion',
+      });
     });
   });
 

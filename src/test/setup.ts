@@ -5,6 +5,4 @@ globalThis.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
-} as any;
-
-
+} as typeof ResizeObserver;

@@ -9,10 +9,9 @@ export const userIngredientService = {
       offset?: number;
     }
   ): Promise<UserIngredientsResponse> {
-    const response = await api.get<UserIngredientsResponse>(
-      `/users/${userId}/ingredients`,
-      { params }
-    );
+    const response = await api.get<UserIngredientsResponse>(`/users/${userId}/ingredients`, {
+      params,
+    });
     return response.data;
   },
 
@@ -36,13 +35,9 @@ export const userIngredientService = {
     });
   },
 
-  async removeIngredients(
-    userId: number,
-    ingredientIds: number[]
-  ): Promise<void> {
+  async removeIngredients(userId: number, ingredientIds: number[]): Promise<void> {
     await api.delete(`/users/${userId}/ingredients`, {
       data: { ids: ingredientIds },
     });
   },
 };
-

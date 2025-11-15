@@ -19,4 +19,3 @@ export const ingredientService = {
     return response.data;
   },
 };
-

@@ -88,9 +88,7 @@ export interface RecipeFilters {
   cuisineId?: number;
 }
 
-
 export interface UpdateIngredientPayload {
   id: number | null;
   name: string;
 }
-

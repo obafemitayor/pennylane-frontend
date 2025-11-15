@@ -25,7 +25,7 @@ describe('RecipeDetails', () => {
   });
 
   it('shows an error message when the recipe details cannot be fetched', () => {
-    (useRecipeDetails as any).mockReturnValue({
+    (useRecipeDetails as ReturnType<typeof vi.fn>).mockReturnValue({
       recipe: null,
       loading: false,
       error: 'Failed to fetch recipe',
@@ -50,7 +50,7 @@ describe('RecipeDetails', () => {
       missing_ingredients: ['flour'],
     };
 
-    (useRecipeDetails as any).mockReturnValue({
+    (useRecipeDetails as ReturnType<typeof vi.fn>).mockReturnValue({
       recipe: mockRecipe,
       loading: false,
       error: null,

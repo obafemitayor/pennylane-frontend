@@ -9,14 +9,16 @@ export const userService = {
     return response.data;
   },
 
-  async createUser(email: string, ingredients: {
-    ingredientsInDB: number[];
-    ingredientsNotInDB: string[];
-  }): Promise<void> {
+  async createUser(
+    email: string,
+    ingredients: {
+      ingredientsInDB: number[];
+      ingredientsNotInDB: string[];
+    }
+  ): Promise<void> {
     await api.post('/users', {
       userEmail: email,
       ingredients,
     });
   },
 };
-

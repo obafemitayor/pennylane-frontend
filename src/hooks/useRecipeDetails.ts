@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import type { AxiosError } from 'axios';
 import { recipeService } from '../services/recipeService';
 import type { RecipeDetails } from '../types';
 
@@ -7,18 +8,16 @@ export const useRecipeDetails = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const getRecipeDetails = useCallback(async (
-    userId: number,
-    recipeId: number
-  ) => {
+  const getRecipeDetails = useCallback(async (userId: number, recipeId: number) => {
     setLoading(true);
     setError(null);
 
     try {
       const recipeData = await recipeService.getRecipeDetails(userId, recipeId);
       setRecipe(recipeData);
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to fetch recipe details');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ error?: string }>;
+      setError(axiosError.response?.data?.error || 'Failed to fetch recipe details');
       setRecipe(null);
     } finally {
       setLoading(false);
@@ -32,4 +31,3 @@ export const useRecipeDetails = () => {
     getRecipeDetails,
   };
 };
-

@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import type { AxiosError } from 'axios';
 import { userService } from '../services/userService';
 import type { User } from '../types';
 
@@ -15,10 +16,11 @@ export const useUser = () => {
       const userData = await userService.getUserByEmail(email);
       setUser(userData);
       return userData;
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Failed to fetch user';
+    } catch (err) {
+      const axiosError = err as AxiosError<{ error?: string }>;
+      const errorMessage = axiosError.response?.data?.error || 'Failed to fetch user';
       setError(errorMessage);
-      if (err.response?.status === 404) {
+      if (axiosError.response?.status === 404) {
         return null;
       }
       throw err;
@@ -34,4 +36,3 @@ export const useUser = () => {
     fetchUserByEmail,
   };
 };
-

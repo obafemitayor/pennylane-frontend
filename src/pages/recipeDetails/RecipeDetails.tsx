@@ -66,7 +66,13 @@ export const RecipeDetails: React.FC = () => {
   return (
     <Container maxW="container.lg" py={8}>
       <VStack gap={6} align="stretch">
-        <Button onClick={() => navigate(-1)} variant="solid" colorPalette="blue" color="white" alignSelf="flex-start">
+        <Button
+          onClick={() => navigate(-1)}
+          variant="solid"
+          colorPalette="blue"
+          color="white"
+          alignSelf="flex-start"
+        >
           {intl.formatMessage(messages.back)}
         </Button>
 
@@ -93,7 +99,8 @@ export const RecipeDetails: React.FC = () => {
           )}
           {recipe.prep_time && (
             <Badge colorScheme="purple">
-              {intl.formatMessage(messages.prep)}: {recipe.prep_time} {intl.formatMessage(messages.min)}
+              {intl.formatMessage(messages.prep)}: {recipe.prep_time}{' '}
+              {intl.formatMessage(messages.min)}
             </Badge>
           )}
           {recipe.ratings && (
@@ -126,9 +133,9 @@ export const RecipeDetails: React.FC = () => {
 
         {recipe.missing_ingredients.length > 0 && (
           <Box>
-            <Text 
-              fontSize="md" 
-              mb={4} 
+            <Text
+              fontSize="md"
+              mb={4}
               fontWeight="medium"
               color={recipe.missing_ingredients.length <= 5 ? 'orange.500' : 'red.500'}
             >

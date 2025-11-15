@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
+import type { AxiosError } from 'axios';
 import { ingredientService } from '../services/ingredientService';
 import type { Ingredient, IngredientsResponse } from '../types';
 
@@ -32,8 +33,9 @@ export const useIngredients = () => {
         name: `Add "${query}" as an ingredient`,
       });
       setIngredients(response.ingredients);
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to fetch ingredients');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ error?: string }>;
+      setError(axiosError.response?.data?.error || 'Failed to fetch ingredients');
       setIngredients([]);
     } finally {
       setLoading(false);
@@ -45,18 +47,21 @@ export const useIngredients = () => {
     setError(null);
   }, []);
 
-  const searchIngredients = useCallback((query: string) => {
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
-    }
-    if (!query.trim()) {
-      reset();
-      return;
-    }
-    debounceTimeoutRef.current = setTimeout(() => {
-      fetchIngredients(query);
-    }, DEBOUNCE_DELAY);
-  }, [fetchIngredients, reset]);
+  const searchIngredients = useCallback(
+    (query: string) => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+      if (!query.trim()) {
+        reset();
+        return;
+      }
+      debounceTimeoutRef.current = setTimeout(() => {
+        fetchIngredients(query);
+      }, DEBOUNCE_DELAY);
+    },
+    [fetchIngredients, reset]
+  );
 
   return {
     ingredients,
@@ -66,4 +71,3 @@ export const useIngredients = () => {
     reset,
   };
 };
-

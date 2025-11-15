@@ -3,7 +3,8 @@ import { defineMessages } from 'react-intl';
 export const messages = defineMessages({
   recommendedRecipes: {
     id: 'home.recommendedRecipes',
-    defaultMessage: 'Here\'s what you can cook now… and the ones you\'re just a few ingredients away from. 👌',
+    defaultMessage:
+      "Here's what you can cook now… and the ones you're just a few ingredients away from. 👌",
   },
   categoriesFilter: {
     id: 'home.categoriesFilter',
@@ -67,14 +68,16 @@ export const messages = defineMessages({
   },
   canFullyCook: {
     id: 'home.canFullyCook',
-    defaultMessage: 'You\'re all set, you can cook this right now! 👌',
+    defaultMessage: "You're all set, you can cook this right now! 👌",
   },
   needFewIngredients: {
     id: 'home.needFewIngredients',
-    defaultMessage: 'You\'re super close to cooking this, you just need to grab {count} {count, plural, one {ingredient} other {ingredients}} 🤏',
+    defaultMessage:
+      "You're super close to cooking this, you just need to grab {count} {count, plural, one {ingredient} other {ingredients}} 🤏",
   },
   needManyIngredients: {
     id: 'home.needManyIngredients',
-    defaultMessage: 'This one\'s a stretch, your pantry said "not today"😅. You\'re missing quite a few ingredients for this recipe.',
+    defaultMessage:
+      'This one\'s a stretch, your pantry said "not today"😅. You\'re missing quite a few ingredients for this recipe.',
   },
 });

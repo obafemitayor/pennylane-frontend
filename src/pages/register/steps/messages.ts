@@ -18,4 +18,3 @@ export const messages = defineMessages({
     defaultMessage: 'Oops, looks like your email address is not valid. Please try again.',
   },
 });
-

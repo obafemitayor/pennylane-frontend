@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
+import type { AxiosError } from 'axios';
 import { categoryService } from '../services/categoryService';
 import type { Category, CategoriesParams } from '../types';
 
@@ -23,8 +24,9 @@ export const useCategories = () => {
       };
       const response = await categoryService.getCategories(params);
       setCategories(response.categories);
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to fetch categories');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ error?: string }>;
+      setError(axiosError.response?.data?.error || 'Failed to fetch categories');
       setCategories([]);
     } finally {
       setLoading(false);
@@ -36,18 +38,21 @@ export const useCategories = () => {
     setError(null);
   }, []);
 
-  const searchCategories = useCallback((query: string) => {
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
-    }
-    if (!query.trim()) {
-      reset();
-      return;
-    }
-    debounceTimeoutRef.current = setTimeout(() => {
-      fetchCategories(query);
-    }, DEBOUNCE_DELAY);
-  }, [fetchCategories, reset]);
+  const searchCategories = useCallback(
+    (query: string) => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+      if (!query.trim()) {
+        reset();
+        return;
+      }
+      debounceTimeoutRef.current = setTimeout(() => {
+        fetchCategories(query);
+      }, DEBOUNCE_DELAY);
+    },
+    [fetchCategories, reset]
+  );
 
   return {
     categories,
@@ -58,4 +63,3 @@ export const useCategories = () => {
     fetchCategories,
   };
 };
-

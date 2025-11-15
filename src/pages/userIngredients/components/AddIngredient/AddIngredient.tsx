@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
+import type { AxiosError } from 'axios';
 import { Button, VStack, HStack, Text } from '@chakra-ui/react';
 import { UserIngredientPicker } from '../../../../components/userIngredientPicker/UserIngredientPicker';
 import { userIngredientService } from '../../../../services/userIngredientService';
@@ -13,17 +14,13 @@ interface AddIngredientProps {
   onCancel: () => void;
 }
 
-export const AddIngredient: React.FC<AddIngredientProps> = ({
-  userId,
-  onSave,
-  onCancel,
-}) => {
+export const AddIngredient: React.FC<AddIngredientProps> = ({ userId, onSave, onCancel }) => {
   const intl = useIntl();
   const [userIngredients, setUserIngredients] = useState<UserIngredientStepInput[]>([
     {
       id: '1',
       selectedIngredient: null,
-    }
+    },
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,9 +42,10 @@ export const AddIngredient: React.FC<AddIngredientProps> = ({
         ingredientsNotInDB,
       });
       onSave();
-    } catch (err: any) {
+    } catch (err) {
+      const axiosError = err as AxiosError<{ error?: string }>;
       console.error('Failed to save ingredients:', err);
-      alert(err.response?.data?.error || intl.formatMessage(messages.failedToAdd));
+      alert(axiosError.response?.data?.error || intl.formatMessage(messages.failedToAdd));
     } finally {
       setIsLoading(false);
     }
@@ -88,4 +86,3 @@ export const AddIngredient: React.FC<AddIngredientProps> = ({
     </VStack>
   );
 };
-

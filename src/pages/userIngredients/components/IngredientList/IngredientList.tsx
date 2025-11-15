@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
-import {
-  Box,
-  Table,
-  HStack,
-  IconButton,
-  Text,
-  Button,
-  Dialog,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Table, HStack, IconButton, Text, Button, Dialog, VStack } from '@chakra-ui/react';
 import { MdEdit, MdDelete } from 'react-icons/md';
 import { UserIngredientPicker } from '../../../../components/userIngredientPicker/UserIngredientPicker';
 import { useUserIngredients } from '../../../../hooks/useUserIngredients';
@@ -40,13 +31,15 @@ const EditIngredientModal: React.FC<EditIngredientModalProps> = ({
 
   React.useEffect(() => {
     if (ingredient) {
-      setUserIngredients([{
-        id: ingredient.id.toString(),
-        selectedIngredient: {
-          id: ingredient.ingredient_id,
-          name: ingredient.ingredient?.name || '',
+      setUserIngredients([
+        {
+          id: ingredient.id.toString(),
+          selectedIngredient: {
+            id: ingredient.ingredient_id,
+            name: ingredient.ingredient?.name || '',
+          },
         },
-      }]);
+      ]);
     } else {
       setUserIngredients([]);
     }
@@ -56,7 +49,7 @@ const EditIngredientModal: React.FC<EditIngredientModalProps> = ({
     if (!ingredient) {
       return;
     }
-    const updatedUserIngredient = userIngredients.find(ui => ui.id === ingredient.id.toString());
+    const updatedUserIngredient = userIngredients.find((ui) => ui.id === ingredient.id.toString());
     if (!updatedUserIngredient?.selectedIngredient) {
       return;
     }
@@ -69,17 +62,21 @@ const EditIngredientModal: React.FC<EditIngredientModalProps> = ({
       await updateIngredient(ingredient.id, ingredientPayload);
       onClose();
       window.location.reload();
-    } catch (err: any) {
-      alert(err.message || intl.formatMessage(messages.failedToUpdate));
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      alert(error.message || intl.formatMessage(messages.failedToUpdate));
     }
   };
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={(details) => {
-      if (!details.open) {
-        onClose();
-      }
-    }}>
+    <Dialog.Root
+      open={isOpen}
+      onOpenChange={(details) => {
+        if (!details.open) {
+          onClose();
+        }
+      }}
+    >
       <Dialog.Backdrop />
       <Dialog.Positioner>
         <Dialog.Content>
@@ -126,10 +123,7 @@ const EditIngredientModal: React.FC<EditIngredientModalProps> = ({
   );
 };
 
-export const IngredientList: React.FC<IngredientListProps> = ({
-  userId,
-  userIngredientsList,
-}) => {
+export const IngredientList: React.FC<IngredientListProps> = ({ userId, userIngredientsList }) => {
   const intl = useIntl();
   const { deleteIngredient, loading } = useUserIngredients(userId);
   const [editingIngredient, setEditingIngredient] = useState<UserIngredient | null>(null);
@@ -152,8 +146,9 @@ export const IngredientList: React.FC<IngredientListProps> = ({
     try {
       await deleteIngredient(ingredientId);
       window.location.reload();
-    } catch (err: any) {
-      alert(err.message || intl.formatMessage(messages.failedToDelete));
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      alert(error.message || intl.formatMessage(messages.failedToDelete));
     }
   };
 
@@ -167,20 +162,14 @@ export const IngredientList: React.FC<IngredientListProps> = ({
         <Table.Root>
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader>
-                {intl.formatMessage(messages.ingredientName)}
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                {intl.formatMessage(messages.actions)}
-              </Table.ColumnHeader>
+              <Table.ColumnHeader>{intl.formatMessage(messages.ingredientName)}</Table.ColumnHeader>
+              <Table.ColumnHeader>{intl.formatMessage(messages.actions)}</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
             {userIngredientsList.map((userIngredient) => (
               <Table.Row key={userIngredient.id}>
-                <Table.Cell>
-                  {userIngredient.ingredient?.name || ''}
-                </Table.Cell>
+                <Table.Cell>{userIngredient.ingredient?.name || ''}</Table.Cell>
                 <Table.Cell>
                   <HStack>
                     <IconButton
@@ -217,4 +206,3 @@ export const IngredientList: React.FC<IngredientListProps> = ({
     </>
   );
 };
-

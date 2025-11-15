@@ -41,7 +41,13 @@ interface ViewUserIngredientsProps {
   userId: number;
 }
 
-const CategoryFilter: React.FC<CategoryFilterProps> = ({ categoryId, onCategoryChange, categories, onInputChange, loading }) => {
+const CategoryFilter: React.FC<CategoryFilterProps> = ({
+  categoryId,
+  onCategoryChange,
+  categories,
+  onInputChange,
+  loading,
+}) => {
   const intl = useIntl();
   const [inputValue, setInputValue] = useState<string>('');
   const { collection, set: setCollection } = useListCollection<{ value: string; label: string }>({
@@ -64,7 +70,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categoryId, onCategoryC
     if (selectedCategory) {
       setInputValue(selectedCategory.name);
     }
-  }, [categoryId]);
+  }, [categoryId, categories]);
 
   const handleInputValueChange = (e: { inputValue: string }) => {
     setInputValue(e.inputValue);
@@ -105,9 +111,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categoryId, onCategoryC
         <Combobox.Positioner>
           <Combobox.Content>
             {categories.length === 0 && !loading && (
-              <Combobox.Empty>
-                {intl.formatMessage(messages.noCategories)}
-              </Combobox.Empty>
+              <Combobox.Empty>{intl.formatMessage(messages.noCategories)}</Combobox.Empty>
             )}
             {categories.length > 0 && (
               <Combobox.ItemGroup>
@@ -115,10 +119,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categoryId, onCategoryC
                   {intl.formatMessage(messages.categoriesFilter)}
                 </Combobox.Item>
                 {categories.map((cat) => (
-                  <Combobox.Item
-                    key={cat.id}
-                    item={cat.id.toString()}
-                  >
+                  <Combobox.Item key={cat.id} item={cat.id.toString()}>
                     {cat.name}
                   </Combobox.Item>
                 ))}
@@ -170,7 +171,10 @@ const CuisineFilter: React.FC<CuisineFilterProps> = ({ cuisineId, onCuisineChang
         <Select.HiddenSelect />
         <Select.Control bg="white" color="gray.900">
           <Select.Trigger bg="white" color="gray.900">
-            <Select.ValueText placeholder={intl.formatMessage(messages.cuisinesFilter)} color="gray.900" />
+            <Select.ValueText
+              placeholder={intl.formatMessage(messages.cuisinesFilter)}
+              color="gray.900"
+            />
           </Select.Trigger>
         </Select.Control>
         <Select.Positioner>
@@ -298,15 +302,15 @@ export const Home: React.FC = () => {
 
         <HStack gap={4} justify="space-between">
           <HStack gap={4}>
-            <CategoryFilter 
-              categoryId={categoryId} 
+            <CategoryFilter
+              categoryId={categoryId}
               onCategoryChange={setCategoryId}
               categories={categories}
               onInputChange={searchCategories}
               loading={categoriesLoading}
             />
-            <CuisineFilter 
-              cuisineId={cuisineId} 
+            <CuisineFilter
+              cuisineId={cuisineId}
               onCuisineChange={setCuisineId}
               cuisines={cuisines}
             />
@@ -316,7 +320,10 @@ export const Home: React.FC = () => {
 
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
           {currentRecipes.map((recipe) => {
-            const { bgColor: badgeBgColor, message: badgeMessage } = getRecipeBadgeInfo(recipe.total_ingredients_missing_for_recipe, intl);
+            const { bgColor: badgeBgColor, message: badgeMessage } = getRecipeBadgeInfo(
+              recipe.total_ingredients_missing_for_recipe,
+              intl
+            );
             return (
               <Card.Root
                 key={recipe.id}
@@ -327,9 +334,7 @@ export const Home: React.FC = () => {
               >
                 <Card.Body gap={2}>
                   <Avatar.Root size="lg" shape="rounded">
-                    {recipe.image_url && (
-                      <Avatar.Image src={recipe.image_url} alt={recipe.name} />
-                    )}
+                    {recipe.image_url && <Avatar.Image src={recipe.image_url} alt={recipe.name} />}
                     <Avatar.Fallback name={recipe.name} />
                   </Avatar.Root>
                   <Card.Title mt={2}>{recipe.name}</Card.Title>
@@ -344,7 +349,8 @@ export const Home: React.FC = () => {
                       )}
                       {recipe.prep_time && (
                         <Text fontSize="sm">
-                          {intl.formatMessage(messages.prep)}: {recipe.prep_time} {intl.formatMessage(messages.min)}
+                          {intl.formatMessage(messages.prep)}: {recipe.prep_time}{' '}
+                          {intl.formatMessage(messages.min)}
                         </Text>
                       )}
                       {recipe.ratings && (

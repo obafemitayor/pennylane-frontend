@@ -15,4 +15,3 @@ export const cuisineService = {
     return response.data.cuisines;
   },
 };
-

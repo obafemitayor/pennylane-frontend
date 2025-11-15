@@ -13,4 +13,3 @@ export const localStorageUtils = {
     localStorage.removeItem(USER_EMAIL_KEY);
   },
 };
-

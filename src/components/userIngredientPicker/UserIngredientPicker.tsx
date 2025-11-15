@@ -64,10 +64,8 @@ const IngredientsSelect: React.FC<IngredientsSelectProps> = ({
 
   const handleValueChange = (e: { value: string | string[] }) => {
     const selectedValue = Array.isArray(e.value) ? e.value[0] : e.value;
-    const selectedIngredient = ingredients.find(
-      (ing) => ing.id !== null 
-        ? ing.id.toString() === selectedValue 
-        : ing.name === selectedValue
+    const selectedIngredient = ingredients.find((ing) =>
+      ing.id !== null ? ing.id.toString() === selectedValue : ing.name === selectedValue
     );
     if (selectedIngredient) {
       const parsedIngredient = parseIngredient(selectedIngredient);
@@ -101,14 +99,10 @@ const IngredientsSelect: React.FC<IngredientsSelectProps> = ({
             {ingredients.length > 0 && (
               <Combobox.ItemGroup>
                 {ingredients.map((ingredient) => {
-                  const itemKey = ingredient.id !== null 
-                    ? ingredient.id.toString() 
-                    : ingredient.name;
+                  const itemKey =
+                    ingredient.id !== null ? ingredient.id.toString() : ingredient.name;
                   return (
-                    <Combobox.Item
-                      key={itemKey}
-                      item={itemKey}
-                    >
+                    <Combobox.Item key={itemKey} item={itemKey}>
                       {ingredient.name}
                     </Combobox.Item>
                   );
@@ -135,10 +129,12 @@ export const UserIngredientPicker: React.FC<UserIngredientPickerProps> = ({
   });
 
   useEffect(() => {
-    setCollection(ingredients.map((ing) => ({
-      value: ing.id !== null ? ing.id.toString() : ing.name,
-      label: ing.name,
-    })));
+    setCollection(
+      ingredients.map((ing) => ({
+        value: ing.id !== null ? ing.id.toString() : ing.name,
+        label: ing.name,
+      }))
+    );
   }, [ingredients, setCollection]);
 
   const handleInputChange = (id: string, value: string) => {
@@ -149,9 +145,7 @@ export const UserIngredientPicker: React.FC<UserIngredientPickerProps> = ({
       reset();
       setCollection([]);
       setUserIngredients((prev) =>
-        prev.map((input) =>
-          input.id === id ? { ...input, selectedIngredient: null } : input
-        )
+        prev.map((input) => (input.id === id ? { ...input, selectedIngredient: null } : input))
       );
       return;
     }
@@ -176,10 +170,7 @@ export const UserIngredientPicker: React.FC<UserIngredientPickerProps> = ({
   const addUserIngredient = () => {
     const newId = Date.now().toString();
     setInputValues((prev) => ({ ...prev, [newId]: '' }));
-    setUserIngredients((prev) => [
-      ...prev,
-      { id: newId, selectedIngredient: null },
-    ]);
+    setUserIngredients((prev) => [...prev, { id: newId, selectedIngredient: null }]);
   };
 
   const removeUserIngredient = (id: string) => {
@@ -207,9 +198,11 @@ export const UserIngredientPicker: React.FC<UserIngredientPickerProps> = ({
                   <Box flex={1} w="100%">
                     <IngredientsSelect
                       inputId={input.id}
-                      value={inputValues[input.id] !== undefined 
-                        ? inputValues[input.id] 
-                        : (input.selectedIngredient?.name || '')}
+                      value={
+                        inputValues[input.id] !== undefined
+                          ? inputValues[input.id]
+                          : input.selectedIngredient?.name || ''
+                      }
                       collection={collection}
                       ingredients={ingredients}
                       loading={loading}
@@ -247,11 +240,9 @@ export const UserIngredientPicker: React.FC<UserIngredientPickerProps> = ({
                 </Button>
               </HStack>
             )}
-
           </VStack>
         </VStack>
       </Box>
     </Container>
   );
 };
-

@@ -46,4 +46,3 @@ export const messages = defineMessages({
     defaultMessage: 'Cancel',
   },
 });
-

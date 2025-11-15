@@ -34,4 +34,3 @@ Thanks! This helps me understand your kitchen better — and cook up perfect rec
     defaultMessage: 'Add "{value}" as an ingredient',
   },
 });
-

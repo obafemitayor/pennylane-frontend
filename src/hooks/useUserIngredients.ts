@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import type { AxiosError } from 'axios';
 import { useIntl } from 'react-intl';
 import { userIngredientService } from '../services/userIngredientService';
 import type { UserIngredient, UpdateIngredientPayload } from '../types';
@@ -28,8 +29,11 @@ export const useUserIngredients = (userId: number | undefined) => {
         setIngredients(response.ingredients);
         setHasMore(response.has_more);
         setCurrentOffset(response.offset);
-      } catch (err: any) {
-        setError(err.response?.data?.error || intl.formatMessage({ id: 'pantry.failedToLoad' }));
+      } catch (err) {
+        const axiosError = err as AxiosError<{ error?: string }>;
+        setError(
+          axiosError.response?.data?.error || intl.formatMessage({ id: 'pantry.failedToLoad' })
+        );
       } finally {
         setLoading(false);
       }
@@ -60,8 +64,11 @@ export const useUserIngredients = (userId: number | undefined) => {
     setLoading(true);
     try {
       await userIngredientService.updateIngredient(userId, ingredientId, ingredient);
-    } catch (err: any) {
-      throw new Error(err.response?.data?.error || intl.formatMessage({ id: 'pantry.failedToUpdate' }));
+    } catch (err) {
+      const axiosError = err as AxiosError<{ error?: string }>;
+      throw new Error(
+        axiosError.response?.data?.error || intl.formatMessage({ id: 'pantry.failedToUpdate' })
+      );
     } finally {
       setLoading(false);
     }
@@ -74,8 +81,11 @@ export const useUserIngredients = (userId: number | undefined) => {
     setLoading(true);
     try {
       await userIngredientService.removeIngredients(userId, [ingredientId]);
-    } catch (err: any) {
-      throw new Error(err.response?.data?.error || intl.formatMessage({ id: 'pantry.failedToDelete' }));
+    } catch (err) {
+      const axiosError = err as AxiosError<{ error?: string }>;
+      throw new Error(
+        axiosError.response?.data?.error || intl.formatMessage({ id: 'pantry.failedToDelete' })
+      );
     } finally {
       setLoading(false);
     }
@@ -94,4 +104,3 @@ export const useUserIngredients = (userId: number | undefined) => {
     deleteIngredient,
   };
 };
-

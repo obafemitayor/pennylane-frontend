@@ -18,4 +18,3 @@ export const messages = defineMessages({
     defaultMessage: 'Please add at least one ingredient.',
   },
 });
-

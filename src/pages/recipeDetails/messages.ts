@@ -35,15 +35,16 @@ export const messages = defineMessages({
   },
   allIngredientsAvailable: {
     id: 'recipeDetails.allIngredientsAvailable',
-    defaultMessage: 'You\'re all set, you\'ve got every ingredient you need for this recipe 👌',
+    defaultMessage: "You're all set, you've got every ingredient you need for this recipe 👌",
   },
   closeToCooking: {
     id: 'recipeDetails.closeToCooking',
-    defaultMessage: 'You\'re really close!. You only need these ingredient(s) below to make it 🤏',
+    defaultMessage: "You're really close!. You only need these ingredient(s) below to make it 🤏",
   },
   kitchenNotStocked: {
     id: 'recipeDetails.kitchenNotStocked',
-    defaultMessage: 'Your kitchen isn\'t stocked for this one yet. Here are the ingredient(s) you\'d need:',
+    defaultMessage:
+      "Your kitchen isn't stocked for this one yet. Here are the ingredient(s) you'd need:",
   },
   recipeNotFound: {
     id: 'recipeDetails.recipeNotFound',

@@ -7,11 +7,8 @@ interface RequestRecipeFilters {
 }
 
 export const recipeService = {
-  async findMostRelevantRecipes(
-    userId: number,
-    params?: RecipeFilters
-  ): Promise<Recipe[]> {   
-    const requestParams : RequestRecipeFilters = {};
+  async findMostRelevantRecipes(userId: number, params?: RecipeFilters): Promise<Recipe[]> {
+    const requestParams: RequestRecipeFilters = {};
     if (params?.categoryId) {
       requestParams.category_id = params.categoryId;
     }
@@ -19,18 +16,16 @@ export const recipeService = {
       requestParams.cuisine_id = params.cuisineId;
     }
     const response = await api.get<{ recommendations: Recipe[] }>(
-      `/users/${userId}/recommended-recipes`,{ params: requestParams});
+      `/users/${userId}/recommended-recipes`,
+      { params: requestParams }
+    );
     return response.data.recommendations;
   },
 
-  async getRecipeDetails(
-    userId: number,
-    recipeId: number
-  ): Promise<RecipeDetails> {
+  async getRecipeDetails(userId: number, recipeId: number): Promise<RecipeDetails> {
     const response = await api.get<RecipeDetails>(
       `/users/${userId}/recommended-recipes/${recipeId}`
     );
     return response.data;
   },
 };
-

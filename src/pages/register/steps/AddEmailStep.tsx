@@ -1,12 +1,6 @@
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
-import {
-  Box,
-  Button,
-  Input,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Button, Input, Text, VStack } from '@chakra-ui/react';
 import { messages } from './messages';
 
 interface AddEmailStepProps {
@@ -48,13 +42,12 @@ export const AddEmailStep = ({ onEmailSubmitted }: AddEmailStepProps) => {
             placeholder={intl.formatMessage(messages.emailPlaceholder)}
             size="lg"
           />
-          {error && <Text color="red.500" fontSize="sm">{error}</Text>}
-          <Button
-            type="submit"
-            colorPalette="blue"
-            size="lg"
-            w="100%"
-          >
+          {error && (
+            <Text color="red.500" fontSize="sm">
+              {error}
+            </Text>
+          )}
+          <Button type="submit" colorPalette="blue" size="lg" w="100%">
             {intl.formatMessage(messages.continue)}
           </Button>
         </VStack>
@@ -62,4 +55,3 @@ export const AddEmailStep = ({ onEmailSubmitted }: AddEmailStepProps) => {
     </VStack>
   );
 };
-

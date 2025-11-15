@@ -11,14 +11,16 @@ import { allMessages } from '../i18n/messages';
 export const convertMessagesForIntl = (
   messages: Record<string, MessageDescriptor>
 ): Record<string, string> => {
-  return Object.keys(messages).reduce((acc, key) => {
-    const message = messages[key as keyof typeof messages];
-    const defaultMessage = typeof message.defaultMessage === 'string' 
-      ? message.defaultMessage 
-      : '';
-    acc[key] = defaultMessage;
-    return acc;
-  }, {} as Record<string, string>);
+  return Object.keys(messages).reduce(
+    (acc, key) => {
+      const message = messages[key as keyof typeof messages];
+      const defaultMessage =
+        typeof message.defaultMessage === 'string' ? message.defaultMessage : '';
+      acc[key] = defaultMessage;
+      return acc;
+    },
+    {} as Record<string, string>
+  );
 };
 
 interface RenderWithProvidersOptions extends Omit<RenderOptions, 'wrapper'> {
@@ -49,7 +51,9 @@ export const renderWithProviders = (
   // Use provided messages or default to allMessages
   const messagesForIntl = providedMessages
     ? convertMessagesForIntl(providedMessages)
-    : convertMessagesForIntl(allMessages[locale as keyof typeof allMessages] as Record<string, MessageDescriptor>);
+    : convertMessagesForIntl(
+        allMessages[locale as keyof typeof allMessages] as Record<string, MessageDescriptor>
+      );
 
   const Wrapper = ({ children }: { children: React.ReactNode }) => {
     const content = (
@@ -59,9 +63,7 @@ export const renderWithProviders = (
     );
 
     if (includeChakra) {
-      return (
-        <ChakraProvider value={defaultSystem}>{content}</ChakraProvider>
-      );
+      return <ChakraProvider value={defaultSystem}>{content}</ChakraProvider>;
     }
 
     return content;
@@ -69,4 +71,3 @@ export const renderWithProviders = (
 
   return render(component, { wrapper: Wrapper, ...renderOptions });
 };
-

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useIntl } from 'react-intl';
+import type { AxiosError } from 'axios';
 import { Button, VStack, Text, Box, Heading } from '@chakra-ui/react';
 import { AddEmailStep } from './steps/AddEmailStep';
 import { UserIngredientPicker } from '../../components/userIngredientPicker/UserIngredientPicker';
@@ -19,7 +20,7 @@ export const Register: React.FC = () => {
     {
       id: '1',
       selectedIngredient: null,
-    }
+    },
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,21 +46,22 @@ export const Register: React.FC = () => {
       });
       localStorageUtils.setUserEmail(email);
       navigate(`/home/${email}`);
-    } catch (err: any) {
+    } catch (err) {
+      const axiosError = err as AxiosError<{ error?: string }>;
       console.error('Failed to save ingredients:', err);
-      alert(err.response?.data?.error || intl.formatMessage(messages.registrationFailed));
+      alert(axiosError.response?.data?.error || intl.formatMessage(messages.registrationFailed));
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Box 
-      minH="100vh" 
-      bg="white" 
-      display="flex" 
-      alignItems="center" 
-      justifyContent="center" 
+    <Box
+      minH="100vh"
+      bg="white"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
       px={4}
       w="100%"
     >
@@ -102,4 +104,3 @@ export const Register: React.FC = () => {
     </Box>
   );
 };
-

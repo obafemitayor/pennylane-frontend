@@ -32,24 +32,24 @@ describe('Home', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useUser as any).mockReturnValue({
+    (useUser as ReturnType<typeof vi.fn>).mockReturnValue({
       user: { id: 1, email: 'test@example.com' },
       loading: false,
       error: null,
       fetchUserByEmail: mockFetchUserByEmail,
     });
-    (useRecipes as any).mockReturnValue({
+    (useRecipes as ReturnType<typeof vi.fn>).mockReturnValue({
       recipes: [],
       loading: false,
       error: null,
       getMostRelevantRecipes: mockGetMostRelevantRecipes,
     });
-    (useCategories as any).mockReturnValue({
+    (useCategories as ReturnType<typeof vi.fn>).mockReturnValue({
       categories: [],
       loading: false,
       error: null,
     });
-    (useCuisines as any).mockReturnValue({
+    (useCuisines as ReturnType<typeof vi.fn>).mockReturnValue({
       cuisines: [],
       loading: false,
       error: null,
@@ -57,7 +57,7 @@ describe('Home', () => {
   });
 
   it('validates when an error occurred', () => {
-    (useRecipes as any).mockReturnValue({
+    (useRecipes as ReturnType<typeof vi.fn>).mockReturnValue({
       recipes: [],
       loading: false,
       error: 'Failed to fetch recipes',
@@ -84,7 +84,7 @@ describe('Home', () => {
       },
     ];
 
-    (useRecipes as any).mockReturnValue({
+    (useRecipes as ReturnType<typeof vi.fn>).mockReturnValue({
       recipes: mockRecipes,
       loading: false,
       error: null,
@@ -101,7 +101,9 @@ describe('Home', () => {
       expect(screen.getByText('Test Recipe')).toBeInTheDocument();
     });
 
-    const recipeCard = screen.getByText('Test Recipe').closest('div[role]') || screen.getByText('Test Recipe').parentElement?.parentElement;
+    const recipeCard =
+      screen.getByText('Test Recipe').closest('div[role]') ||
+      screen.getByText('Test Recipe').parentElement?.parentElement;
     if (recipeCard) {
       await user.click(recipeCard as HTMLElement);
     }
@@ -120,7 +122,7 @@ describe('Home', () => {
       total_ingredients_missing_for_recipe: 2,
     }));
 
-    (useRecipes as any).mockReturnValue({
+    (useRecipes as ReturnType<typeof vi.fn>).mockReturnValue({
       recipes: mockRecipes,
       loading: false,
       error: null,

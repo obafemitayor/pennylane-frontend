@@ -1,6 +1,8 @@
 import type { UserIngredientStepInput, UserIngredientsPayload } from '../../types';
 
-export const buildUserIngredientsPayload = (userIngredients: UserIngredientStepInput[]): UserIngredientsPayload => {
+export const buildUserIngredientsPayload = (
+  userIngredients: UserIngredientStepInput[]
+): UserIngredientsPayload => {
   return userIngredients.reduce(
     (acc, input) => {
       if (!input.selectedIngredient) {
@@ -17,4 +19,3 @@ export const buildUserIngredientsPayload = (userIngredients: UserIngredientStepI
     { ingredientsInDB: [] as number[], ingredientsNotInDB: [] as string[] }
   );
 };
-
