@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { Box, Combobox, Spinner } from '@chakra-ui/react';
 import { useListCollection } from '@ark-ui/react';
@@ -21,6 +21,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
 }) => {
   const intl = useIntl();
   const [inputValue, setInputValue] = useState<string>('');
+  const prevCategoryIdRef = useRef<number | undefined>(categoryId);
   const { collection, set: setCollection } = useListCollection<{ value: string; label: string }>({
     initialItems: [],
   });
@@ -33,6 +34,11 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   }, [categories, intl, setCollection]);
 
   useEffect(() => {
+    if (prevCategoryIdRef.current === categoryId) {
+      return;
+    }
+    prevCategoryIdRef.current = categoryId;
+
     if (!categoryId) {
       setInputValue('');
       return;

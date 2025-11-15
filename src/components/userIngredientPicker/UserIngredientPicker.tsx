@@ -79,15 +79,12 @@ const IngredientsSelect: React.FC<IngredientsSelectProps> = ({
       <Combobox.Root
         collection={collection}
         value={[]}
+        inputValue={value}
         onInputValueChange={(e) => onInputChange(inputId, e.inputValue)}
         onValueChange={handleValueChange}
       >
         <Combobox.Control w="100%">
-          <Combobox.Input
-            placeholder={intl.formatMessage(messages.searchPlaceholder)}
-            value={value}
-            w="100%"
-          />
+          <Combobox.Input placeholder={intl.formatMessage(messages.searchPlaceholder)} w="100%" />
           {loading && (
             <Combobox.IndicatorGroup>
               <Spinner size="sm" />

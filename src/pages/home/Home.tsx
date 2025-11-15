@@ -186,7 +186,7 @@ export const Home: React.FC = () => {
                     <Avatar.Fallback name={recipe.name} />
                   </Avatar.Root>
                   <Card.Title mt={2}>{recipe.name}</Card.Title>
-                  <Card.Description>
+                  <Box mt={2}>
                     <VStack align="start" gap={1}>
                       {recipe.cook_time != null && (
                         <Text fontSize="sm">
@@ -219,7 +219,7 @@ export const Home: React.FC = () => {
                         {badgeMessage}
                       </Box>
                     </VStack>
-                  </Card.Description>
+                  </Box>
                 </Card.Body>
               </Card.Root>
             );
