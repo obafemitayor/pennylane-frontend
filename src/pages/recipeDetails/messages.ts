@@ -50,4 +50,8 @@ export const messages = defineMessages({
     id: 'recipeDetails.goBack',
     defaultMessage: 'Go Back',
   },
+  failedToLoadRecipe: {
+    id: 'recipeDetails.failedToLoadRecipe',
+    defaultMessage: 'Failed to load recipe. Please try again.',
+  },
 });

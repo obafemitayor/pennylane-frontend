@@ -38,7 +38,7 @@ describe('RecipeDetails', () => {
       </BrowserRouter>
     );
 
-    expect(screen.getByText('Failed to fetch recipe')).toBeInTheDocument();
+    expect(screen.getByText('Failed to load recipe. Please try again.')).toBeInTheDocument();
   });
 
   it('shows the details of a recipe', async () => {

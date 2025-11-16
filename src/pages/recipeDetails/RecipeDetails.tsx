@@ -41,7 +41,7 @@ export const RecipeDetails: React.FC = () => {
     return (
       <Container centerContent>
         <Text mt={8} color="red.500">
-          {error}
+          {intl.formatMessage(messages.failedToLoadRecipe)}
         </Text>
         <Button mt={4} onClick={() => navigate(-1)}>
           {intl.formatMessage(messages.goBack)}
