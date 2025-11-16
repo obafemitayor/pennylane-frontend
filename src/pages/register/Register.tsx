@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import type { AxiosError } from 'axios';
 import { Button, VStack, Text, Box, Heading } from '@chakra-ui/react';
-import { AddEmailStep } from './steps/AddEmailStep';
+import { AddEmailStep } from './components/AddEmailStep';
 import { UserIngredientPicker } from '../../components/userIngredientPicker/UserIngredientPicker';
 import type { UserIngredientPickerInput } from '../../types';
 import { userService } from '../../services/userService';
-import { buildUserIngredientsPayload } from '../utils/utils';
+import { buildUserIngredientsPayload } from '../../utils/userIngredientPayload';
 import { localStorageUtils } from '../../utils/localStorage';
 import { messages } from './messages';
 

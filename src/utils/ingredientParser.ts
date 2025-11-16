@@ -15,4 +15,3 @@ export const parseIngredient = (ingredient: Ingredient): Ingredient => {
   }
   return ingredient;
 };
-

@@ -1,4 +1,4 @@
-import type { UserIngredientPickerInput, UserIngredientsPayload } from '../../types';
+import type { UserIngredientPickerInput, UserIngredientsPayload } from '../types';
 
 export const buildUserIngredientsPayload = (
   userIngredients: UserIngredientPickerInput[]

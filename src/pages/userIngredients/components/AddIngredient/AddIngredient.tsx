@@ -4,7 +4,7 @@ import type { AxiosError } from 'axios';
 import { Button, VStack, HStack, Text } from '@chakra-ui/react';
 import { UserIngredientPicker } from '../../../../components/userIngredientPicker/UserIngredientPicker';
 import { userIngredientService } from '../../../../services/userIngredientService';
-import { buildUserIngredientsPayload } from '../../../utils/utils';
+import { buildUserIngredientsPayload } from '../../../../utils/userIngredientPayload';
 import type { UserIngredientPickerInput } from '../../../../types';
 import { messages } from './messages';
 

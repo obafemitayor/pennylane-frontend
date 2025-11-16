@@ -209,7 +209,16 @@ describe('Register', () => {
     });
 
     const firstInput = screen.getByPlaceholderText(/search for an ingredient/i);
-    await user.type(firstInput, 'tomato');
+    await user.click(firstInput);
+    await user.clear(firstInput);
+    await user.paste('tomato');
+
+    await waitFor(
+      () => {
+        expect(firstInput).toHaveValue('tomato');
+      },
+      { timeout: 3000 }
+    );
 
     await waitFor(
       () => {
@@ -235,7 +244,16 @@ describe('Register', () => {
 
     const inputs = screen.getAllByPlaceholderText(/search for an ingredient/i);
     const secondInput = inputs[1];
-    await user.type(secondInput, 'newingredient1');
+    await user.click(secondInput);
+    await user.clear(secondInput);
+    await user.paste('newingredient1');
+
+    await waitFor(
+      () => {
+        expect(secondInput).toHaveValue('newingredient1');
+      },
+      { timeout: 3000 }
+    );
 
     await waitFor(
       async () => {
@@ -257,7 +275,16 @@ describe('Register', () => {
 
     const allInputs = screen.getAllByPlaceholderText(/search for an ingredient/i);
     const thirdInput = allInputs[2];
-    await user.type(thirdInput, 'newingredient2');
+    await user.click(thirdInput);
+    await user.clear(thirdInput);
+    await user.paste('newingredient2');
+
+    await waitFor(
+      () => {
+        expect(thirdInput).toHaveValue('newingredient2');
+      },
+      { timeout: 3000 }
+    );
 
     await waitFor(
       async () => {

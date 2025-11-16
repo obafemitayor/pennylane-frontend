@@ -27,11 +27,17 @@ export const IngredientsSelect: React.FC<IngredientsSelectProps> = ({
 }) => {
   const intl = useIntl();
 
+  // The Combobox's onValueChange callback can return either a string or string[] because
+  // Chakra UI's Combobox component supports both single and multiple selection modes.
+  // Even though we only use single selection here, the API maintains consistency by
+  // always potentially returning an array. We handle this by taking the first element
+  // if it's an array, or using the string directly.
   const handleValueChange = (e: { value: string | string[] }) => {
     const selectedValue = Array.isArray(e.value) ? e.value[0] : e.value;
     const selectedIngredient = ingredients.find((ingredient) =>
-      ingredient.id !== null ? ingredient.id.toString() === selectedValue 
-    : ingredient.name === selectedValue
+      ingredient.id !== null
+        ? ingredient.id.toString() === selectedValue
+        : ingredient.name === selectedValue
     );
     if (selectedIngredient) {
       const parsedIngredient = parseIngredient(selectedIngredient);
@@ -78,4 +84,3 @@ export const IngredientsSelect: React.FC<IngredientsSelectProps> = ({
     </Box>
   );
 };
-

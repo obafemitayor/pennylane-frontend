@@ -110,7 +110,16 @@ describe('UserIngredientPicker', () => {
     renderWithProviders(<TestWrapper />);
 
     const input = screen.getByPlaceholderText(messages.searchPlaceholder.defaultMessage);
-    await user.type(input, 'newingredient');
+    await user.click(input);
+    await user.clear(input);
+    await user.paste('newingredient');
+
+    await waitFor(
+      () => {
+        expect(input).toHaveValue('newingredient');
+      },
+      { timeout: 3000 }
+    );
 
     await waitFor(
       () => {
@@ -336,7 +345,17 @@ describe('UserIngredientPicker', () => {
     expect(inputs.length).toBe(2);
     expect(inputs[0]).toHaveValue('Tomato');
     expect(inputs[1]).toHaveValue('');
-    await user.type(inputs[1], 'newingredient');
+    await user.click(inputs[1]);
+    await user.clear(inputs[1]);
+    await user.paste('newingredient');
+
+    await waitFor(
+      () => {
+        expect(inputs[1]).toHaveValue('newingredient');
+      },
+      { timeout: 3000 }
+    );
+
     await waitFor(async () => {
       await user.click(inputs[1]);
       const options = screen.getAllByText('Add "newingredient" as an ingredient');
