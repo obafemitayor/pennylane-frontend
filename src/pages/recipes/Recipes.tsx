@@ -14,7 +14,6 @@ import {
   HStack,
   Button,
 } from '@chakra-ui/react';
-import { useUser } from '../../hooks/useUser';
 import { useRecipes } from '../../hooks/useRecipes';
 import { useCategories } from '../../hooks/useCategories';
 import { useCuisines } from '../../hooks/useCuisines';
@@ -63,9 +62,8 @@ const paginateRecipes = (recipes: Recipe[], currentPage: number, itemsPerPage: n
 
 export const Recipes: React.FC = () => {
   const intl = useIntl();
-  const { email } = useParams<{ email: string }>();
+  const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
-  const { user, loading: userLoading, fetchUserByEmail, error: userError } = useUser();
   const {
     recipes,
     loading: recipesLoading,
@@ -81,35 +79,29 @@ export const Recipes: React.FC = () => {
   const { cuisines, loading: cuisinesLoading, error: cuisinesError } = useCuisines();
   const [categoryId, setCategoryId] = useState<number | undefined>(undefined);
   const [cuisineId, setCuisineId] = useState<number | undefined>(undefined);
-
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   // Doing Client-Side Pagination because the API returns a maximum of 100 recipes.
   const { currentRecipes, totalPages } = paginateRecipes(recipes, currentPage, itemsPerPage);
+  const parsedUserId = userId ? Number(userId) : undefined;
 
   useEffect(() => {
-    if (email) {
-      fetchUserByEmail(email);
-    }
-  }, [email, fetchUserByEmail]);
-
-  useEffect(() => {
-    if (user) {
-      getMostRelevantRecipes(user.id, {
+    if (parsedUserId) {
+      getMostRelevantRecipes(parsedUserId, {
         categoryId,
         cuisineId,
       });
       setCurrentPage(1);
     }
-  }, [user, categoryId, cuisineId, getMostRelevantRecipes]);
+  }, [parsedUserId, categoryId, cuisineId, getMostRelevantRecipes]);
 
   const handleRecipeClick = (recipeId: number) => {
-    if (user) {
-      navigate(`/users/${user.id}/recipes/${recipeId}`);
+    if (parsedUserId) {
+      navigate(`/users/${parsedUserId}/recipes/${recipeId}`);
     }
   };
 
-  if (userLoading || recipesLoading || cuisinesLoading) {
+  if (recipesLoading || cuisinesLoading) {
     return (
       <Container centerContent>
         <Spinner size="xl" mt={8} />
@@ -117,7 +109,7 @@ export const Recipes: React.FC = () => {
     );
   }
 
-  if (userError || recipesError || categoriesError || cuisinesError) {
+  if (recipesError || categoriesError || cuisinesError) {
     return (
       <Container centerContent>
         <Text mt={8} color="red.500">
@@ -127,7 +119,7 @@ export const Recipes: React.FC = () => {
     );
   }
 
-  if (!user) {
+  if (!parsedUserId) {
     return (
       <Container centerContent>
         <Text mt={8}>{intl.formatMessage(messages.userNotFound)}</Text>
@@ -163,7 +155,7 @@ export const Recipes: React.FC = () => {
               cuisines={cuisines}
             />
           </HStack>
-          <ViewUserIngredients userId={user.id} />
+          <ViewUserIngredients userId={parsedUserId} />
         </HStack>
 
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>

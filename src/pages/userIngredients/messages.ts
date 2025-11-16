@@ -21,4 +21,8 @@ export const messages = defineMessages({
     id: 'userIngredients.next',
     defaultMessage: 'Next',
   },
+  failedToLoadIngredients: {
+    id: 'userIngredients.failedToLoadIngredients',
+    defaultMessage: 'Failed to load ingredients. Please try again.',
+  },
 });

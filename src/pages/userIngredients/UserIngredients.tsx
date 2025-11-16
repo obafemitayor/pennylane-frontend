@@ -40,7 +40,7 @@ export const UserIngredients: React.FC = () => {
     return (
       <Container centerContent>
         <Text color="red.500" mt={8}>
-          {error}
+          {intl.formatMessage(messages.failedToLoadIngredients)}
         </Text>
       </Container>
     );

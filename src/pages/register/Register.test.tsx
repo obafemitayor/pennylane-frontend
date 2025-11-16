@@ -24,7 +24,9 @@ const user = userEvent.setup();
 describe('Register', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (userService.createUser as ReturnType<typeof vi.fn>) = vi.fn().mockResolvedValue(undefined);
+    (userService.createUser as ReturnType<typeof vi.fn>) = vi
+      .fn()
+      .mockResolvedValue({ id: 1, email: 'test@example.com' });
     (ingredientService.getIngredients as ReturnType<typeof vi.fn>) = vi.fn().mockResolvedValue({
       ingredients: [
         { id: 1, name: 'Tomato' },
@@ -164,7 +166,9 @@ describe('Register', () => {
     await user.click(completeButton);
 
     await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith(errorMessage);
+      expect(window.alert).toHaveBeenCalledWith(
+        'Unfortunately, I was unable to create your account. Please try again.'
+      );
     });
   });
 
@@ -310,7 +314,7 @@ describe('Register', () => {
     );
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/home/test@example.com');
+      expect(mockNavigate).toHaveBeenCalledWith('/users/1/recipes');
     });
   });
 });

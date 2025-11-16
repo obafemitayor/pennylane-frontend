@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useIntl } from 'react-intl';
-import type { AxiosError } from 'axios';
 import { Button, VStack, Text, Box, Heading } from '@chakra-ui/react';
 import { AddEmailStep } from './components/AddEmailStep';
 import { UserIngredientPicker } from '../../components/userIngredientPicker/UserIngredientPicker';
 import type { UserIngredientPickerInput } from '../../types';
-import { userService } from '../../services/userService';
+import { useUser } from '../../hooks/useUser';
 import { buildUserIngredientsPayload } from '../../utils/userIngredientPayload';
 import { localStorageUtils } from '../../utils/localStorage';
 import { messages } from './messages';
@@ -22,8 +21,8 @@ export const Register: React.FC = () => {
       selectedIngredient: null,
     },
   ]);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { loading, createUser } = useUser();
 
   const handleEmailSubmitted = (submittedEmail: string) => {
     setEmail(submittedEmail);
@@ -37,21 +36,17 @@ export const Register: React.FC = () => {
       setError(intl.formatMessage(messages.atLeastOneIngredientRequired));
       return;
     }
-    setIsLoading(true);
 
     try {
-      await userService.createUser(email, {
+      const user = await createUser(email, {
         ingredientsInDB,
         ingredientsNotInDB,
       });
       localStorageUtils.setUserEmail(email);
-      navigate(`/home/${email}`);
+      navigate(`/users/${user.id}/recipes`);
     } catch (err: unknown) {
-      const axiosError = err as AxiosError<{ error?: string }>;
-      console.error('Failed to save ingredients:', err);
-      alert(axiosError.response?.data?.error || intl.formatMessage(messages.registrationFailed));
-    } finally {
-      setIsLoading(false);
+      console.error(err);
+      alert(intl.formatMessage(messages.registrationFailed));
     }
   };
 
@@ -89,13 +84,7 @@ export const Register: React.FC = () => {
                 {error}
               </Text>
             )}
-            <Button
-              colorPalette="blue"
-              size="lg"
-              onClick={registerUser}
-              loading={isLoading}
-              w="100%"
-            >
+            <Button colorPalette="blue" size="lg" onClick={registerUser} loading={loading} w="100%">
               {intl.formatMessage(messages.completeRegistration)}
             </Button>
           </VStack>

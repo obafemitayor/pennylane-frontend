@@ -1,5 +1,4 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import type { AxiosError } from 'axios';
 import { categoryService } from '../services/categoryService';
 import type { Category, CategoriesParams } from '../types';
 
@@ -9,7 +8,7 @@ const PAGE_SIZE = 50;
 export const useCategories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<unknown | null>(null);
   const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -33,8 +32,7 @@ export const useCategories = () => {
       const response = await categoryService.getCategories(params);
       setCategories(response.categories);
     } catch (err: unknown) {
-      const axiosError = err as AxiosError<{ error?: string }>;
-      setError(axiosError.response?.data?.error || 'Failed to fetch categories');
+      setError(err);
       setCategories([]);
     } finally {
       setLoading(false);

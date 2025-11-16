@@ -3,13 +3,11 @@ import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Recipes } from './Recipes';
-import { useUser } from '../../hooks/useUser';
 import { useRecipes } from '../../hooks/useRecipes';
 import { useCategories } from '../../hooks/useCategories';
 import { useCuisines } from '../../hooks/useCuisines';
 import { renderWithProviders } from '../../test/testUtils';
 
-vi.mock('../../hooks/useUser');
 vi.mock('../../hooks/useRecipes');
 vi.mock('../../hooks/useCategories');
 vi.mock('../../hooks/useCuisines');
@@ -19,7 +17,7 @@ vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
-    useParams: () => ({ email: 'test@example.com' }),
+    useParams: () => ({ userId: '1' }),
     useNavigate: () => mockNavigate,
   };
 });
@@ -27,17 +25,10 @@ vi.mock('react-router-dom', async () => {
 const user = userEvent.setup();
 
 describe('Recipes', () => {
-  const mockFetchUserByEmail = vi.fn();
   const mockGetMostRelevantRecipes = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useUser as ReturnType<typeof vi.fn>).mockReturnValue({
-      user: { id: 1, email: 'test@example.com' },
-      loading: false,
-      error: null,
-      fetchUserByEmail: mockFetchUserByEmail,
-    });
     (useRecipes as ReturnType<typeof vi.fn>).mockReturnValue({
       recipes: [],
       loading: false,
@@ -62,25 +53,6 @@ describe('Recipes', () => {
       loading: false,
       error: 'Failed to fetch recipes',
       getMostRelevantRecipes: mockGetMostRelevantRecipes,
-    });
-
-    renderWithProviders(
-      <BrowserRouter>
-        <Recipes />
-      </BrowserRouter>
-    );
-
-    expect(
-      screen.getByText(/oops! something went wrong while loading your recipes/i)
-    ).toBeInTheDocument();
-  });
-
-  it('displays an error message when user fails to load', () => {
-    (useUser as ReturnType<typeof vi.fn>).mockReturnValue({
-      user: null,
-      loading: false,
-      error: 'Failed to fetch user',
-      fetchUserByEmail: mockFetchUserByEmail,
     });
 
     renderWithProviders(

@@ -66,7 +66,7 @@ describe('UserIngredients', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText(errorMessage)).toBeInTheDocument();
+      expect(screen.getByText('Failed to load ingredients. Please try again.')).toBeInTheDocument();
     });
   });
 

@@ -9,7 +9,8 @@ export const messages = defineMessages({
     id: 'register.emailStep.personalIntroduction',
     defaultMessage: `Hi, I'm Tayo, your go-to kitchen buddy 💪. I can show you the tastiest recipes you can make with whatever ingredients you already have in your kitchen. 
     
-If you're ready to get cooking, you can start by telling me your email. That way, I can remember you and always have the perfect recipes waiting whenever you return.`,
+If you're ready to get cooking, you can start by telling me your email. That way, I can remember you and always have the perfect recipes waiting whenever you return. 
+And if I've helped you before find something to cook 😉, just enter the same email and I'll show you what you can make right away.`,
   },
   addIngredientsMessage: {
     id: 'register.addIngredientsMessage',

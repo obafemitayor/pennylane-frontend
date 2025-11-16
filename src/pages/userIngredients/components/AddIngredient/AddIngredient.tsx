@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
-import type { AxiosError } from 'axios';
 import { Button, VStack, HStack, Text } from '@chakra-ui/react';
 import { UserIngredientPicker } from '../../../../components/userIngredientPicker/UserIngredientPicker';
-import { userIngredientService } from '../../../../services/userIngredientService';
+import { useUserIngredients } from '../../../../hooks/useUserIngredients';
 import { buildUserIngredientsPayload } from '../../../../utils/userIngredientPayload';
 import type { UserIngredientPickerInput } from '../../../../types';
 import { messages } from './messages';
@@ -22,8 +21,8 @@ export const AddIngredient: React.FC<AddIngredientProps> = ({ userId, onSave, on
       selectedIngredient: null,
     },
   ]);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { loading, addIngredients } = useUserIngredients(userId);
 
   const handleSave = async () => {
     if (!userId) {
@@ -35,19 +34,15 @@ export const AddIngredient: React.FC<AddIngredientProps> = ({ userId, onSave, on
       setError(intl.formatMessage(messages.atLeastOneIngredientRequired));
       return;
     }
-    setIsLoading(true);
     try {
-      await userIngredientService.addIngredients(userId, {
+      await addIngredients({
         ingredientsInDB,
         ingredientsNotInDB,
       });
       onSave();
     } catch (err: unknown) {
-      const axiosError = err as AxiosError<{ error?: string }>;
-      console.error('Failed to save ingredients:', err);
-      alert(axiosError.response?.data?.error || intl.formatMessage(messages.failedToAdd));
-    } finally {
-      setIsLoading(false);
+      console.error(err);
+      alert(intl.formatMessage(messages.failedToAdd));
     }
   };
 
@@ -67,8 +62,8 @@ export const AddIngredient: React.FC<AddIngredientProps> = ({ userId, onSave, on
           colorPalette="blue"
           size="lg"
           onClick={handleSave}
-          loading={isLoading}
-          disabled={isLoading}
+          loading={loading}
+          disabled={loading}
         >
           {intl.formatMessage(messages.add)}
         </Button>

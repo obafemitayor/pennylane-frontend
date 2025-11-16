@@ -15,10 +15,11 @@ export const userService = {
       ingredientsInDB: number[];
       ingredientsNotInDB: string[];
     }
-  ): Promise<void> {
-    await api.post('/users', {
+  ): Promise<{ id: number }> {
+    const response = await api.post<{ id: number }>('/users', {
       userEmail: email,
       ingredients,
     });
+    return response.data;
   },
 };

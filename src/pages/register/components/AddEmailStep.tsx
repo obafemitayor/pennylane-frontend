@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
 import { Box, Button, Input, Text, VStack } from '@chakra-ui/react';
+import { localStorageUtils } from '../../../utils/localStorage';
 import { messages } from './messages';
+import { useUser } from '../../../hooks/useUser';
 
 interface AddEmailStepProps {
   onEmailSubmitted: (email: string) => void;
@@ -14,10 +17,12 @@ const validateEmail = (email: string): boolean => {
 
 export const AddEmailStep = ({ onEmailSubmitted }: AddEmailStepProps) => {
   const intl = useIntl();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const { loading: userLoading, fetchUserByEmail } = useUser();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     if (!email.trim()) {
@@ -28,7 +33,14 @@ export const AddEmailStep = ({ onEmailSubmitted }: AddEmailStepProps) => {
       setError(intl.formatMessage(messages.emailInvalid));
       return;
     }
-    onEmailSubmitted(email);
+
+    const fetchedUser = await fetchUserByEmail(email);
+    if (!fetchedUser) {
+      onEmailSubmitted(email);
+      return;
+    }
+    localStorageUtils.setUserEmail(email);
+    navigate(`/users/${fetchedUser.id}/recipes`);
   };
 
   return (
@@ -47,7 +59,14 @@ export const AddEmailStep = ({ onEmailSubmitted }: AddEmailStepProps) => {
               {error}
             </Text>
           )}
-          <Button type="submit" colorPalette="blue" size="lg" w="100%">
+          <Button
+            type="submit"
+            colorPalette="blue"
+            size="lg"
+            w="100%"
+            loading={userLoading}
+            disabled={userLoading}
+          >
             {intl.formatMessage(messages.continue)}
           </Button>
         </VStack>

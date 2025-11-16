@@ -1,16 +1,13 @@
 import { useState, useCallback } from 'react';
-import type { AxiosError } from 'axios';
-import { useIntl } from 'react-intl';
 import { userIngredientService } from '../services/userIngredientService';
 import type { UserIngredient, UpdateIngredientPayload } from '../types';
 
 const DEFAULT_PAGE_SIZE = 10;
 
 export const useUserIngredients = (userId: number | undefined) => {
-  const intl = useIntl();
   const [ingredients, setIngredients] = useState<UserIngredient[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<unknown | null>(null);
   const [hasMore, setHasMore] = useState(false);
   const [currentOffset, setCurrentOffset] = useState(0);
 
@@ -30,15 +27,12 @@ export const useUserIngredients = (userId: number | undefined) => {
         setHasMore(response.has_more);
         setCurrentOffset(response.offset);
       } catch (err: unknown) {
-        const axiosError = err as AxiosError<{ error?: string }>;
-        setError(
-          axiosError.response?.data?.error || intl.formatMessage({ id: 'pantry.failedToLoad' })
-        );
+        setError(err);
       } finally {
         setLoading(false);
       }
     },
-    [userId, intl]
+    [userId]
   );
 
   const loadNextPage = useCallback(async () => {
@@ -65,10 +59,8 @@ export const useUserIngredients = (userId: number | undefined) => {
     try {
       await userIngredientService.updateIngredient(userId, ingredientId, ingredient);
     } catch (err: unknown) {
-      const axiosError = err as AxiosError<{ error?: string }>;
-      throw new Error(
-        axiosError.response?.data?.error || intl.formatMessage({ id: 'pantry.failedToUpdate' })
-      );
+      setError(err);
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -82,10 +74,27 @@ export const useUserIngredients = (userId: number | undefined) => {
     try {
       await userIngredientService.removeIngredients(userId, [ingredientId]);
     } catch (err: unknown) {
-      const axiosError = err as AxiosError<{ error?: string }>;
-      throw new Error(
-        axiosError.response?.data?.error || intl.formatMessage({ id: 'pantry.failedToDelete' })
-      );
+      setError(err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addIngredients = async (ingredients: {
+    ingredientsInDB: number[];
+    ingredientsNotInDB: string[];
+  }): Promise<void> => {
+    if (!userId) {
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      await userIngredientService.addIngredients(userId, ingredients);
+    } catch (err: unknown) {
+      setError(err);
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -102,5 +111,6 @@ export const useUserIngredients = (userId: number | undefined) => {
     loadPreviousPage,
     updateIngredient,
     deleteIngredient,
+    addIngredients,
   };
 };

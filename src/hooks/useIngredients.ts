@@ -1,5 +1,4 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import type { AxiosError } from 'axios';
 import { ingredientService, type IngredientsParams } from '../services/ingredientService';
 import type { Ingredient, IngredientsResponse } from '../types';
 
@@ -13,7 +12,7 @@ const PAGE_SIZE = 200;
 export const useIngredients = () => {
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<unknown | null>(null);
   const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -40,8 +39,7 @@ export const useIngredients = () => {
       });
       setIngredients(response.ingredients);
     } catch (err: unknown) {
-      const axiosError = err as AxiosError<{ error?: string }>;
-      setError(axiosError.response?.data?.error || 'Failed to fetch ingredients');
+      setError(err);
       setIngredients([]);
     } finally {
       setLoading(false);
