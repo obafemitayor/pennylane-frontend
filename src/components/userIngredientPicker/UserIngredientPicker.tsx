@@ -128,7 +128,7 @@ export const UserIngredientPicker: React.FC<UserIngredientPickerProps> = ({
                       variant="ghost"
                       _hover={{ bg: 'gray.50', color: 'red.600' }}
                     >
-                      <MdDelete />
+                      <MdDelete aria-hidden="true" />
                     </IconButton>
                   )}
                 </HStack>

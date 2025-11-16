@@ -61,7 +61,7 @@ const paginateRecipes = (recipes: Recipe[], currentPage: number, itemsPerPage: n
   };
 };
 
-export const Home: React.FC = () => {
+export const Recipes: React.FC = () => {
   const intl = useIntl();
   const { email } = useParams<{ email: string }>();
   const navigate = useNavigate();

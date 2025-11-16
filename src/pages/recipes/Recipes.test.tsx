@@ -2,7 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { Home } from './Home';
+import { Recipes } from './Recipes';
 import { useUser } from '../../hooks/useUser';
 import { useRecipes } from '../../hooks/useRecipes';
 import { useCategories } from '../../hooks/useCategories';
@@ -26,7 +26,7 @@ vi.mock('react-router-dom', async () => {
 
 const user = userEvent.setup();
 
-describe('Home', () => {
+describe('Recipes', () => {
   const mockFetchUserByEmail = vi.fn();
   const mockGetMostRelevantRecipes = vi.fn();
 
@@ -66,7 +66,7 @@ describe('Home', () => {
 
     renderWithProviders(
       <BrowserRouter>
-        <Home />
+        <Recipes />
       </BrowserRouter>
     );
 
@@ -85,7 +85,7 @@ describe('Home', () => {
 
     renderWithProviders(
       <BrowserRouter>
-        <Home />
+        <Recipes />
       </BrowserRouter>
     );
 
@@ -104,7 +104,7 @@ describe('Home', () => {
 
     renderWithProviders(
       <BrowserRouter>
-        <Home />
+        <Recipes />
       </BrowserRouter>
     );
 
@@ -122,7 +122,7 @@ describe('Home', () => {
 
     renderWithProviders(
       <BrowserRouter>
-        <Home />
+        <Recipes />
       </BrowserRouter>
     );
 
@@ -151,7 +151,7 @@ describe('Home', () => {
 
     renderWithProviders(
       <BrowserRouter>
-        <Home />
+        <Recipes />
       </BrowserRouter>
     );
 
@@ -189,7 +189,7 @@ describe('Home', () => {
 
     renderWithProviders(
       <BrowserRouter>
-        <Home />
+        <Recipes />
       </BrowserRouter>
     );
 
