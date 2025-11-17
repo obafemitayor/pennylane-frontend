@@ -32,6 +32,7 @@ export const UserIngredientPicker: React.FC<UserIngredientPickerProps> = ({
 }) => {
   const intl = useIntl();
   const [inputValues, setInputValues] = useState<Record<string, string>>({});
+  const [activeInputId, setActiveInputId] = useState<string | null>(null);
   const { ingredients, loading, searchIngredients, reset } = useIngredients();
   const { collection, set: setCollection } = useListCollection<{ value: string; label: string }>({
     initialItems: [],
@@ -53,6 +54,7 @@ export const UserIngredientPicker: React.FC<UserIngredientPickerProps> = ({
     if (!searchQuery) {
       reset();
       setCollection([]);
+      setActiveInputId(null);
       setUserIngredients((prev) =>
         prev.map((input) => (input.id === id ? { ...input, selectedIngredient: null } : input))
       );
@@ -60,6 +62,7 @@ export const UserIngredientPicker: React.FC<UserIngredientPickerProps> = ({
     }
     reset();
     setCollection([]);
+    setActiveInputId(id);
     searchIngredients(searchQuery);
   };
 
@@ -73,6 +76,7 @@ export const UserIngredientPicker: React.FC<UserIngredientPickerProps> = ({
         input.id === id ? { ...input, selectedIngredient: parsedIngredient } : input
       )
     );
+    setActiveInputId(null);
     reset();
   };
 
@@ -114,7 +118,7 @@ export const UserIngredientPicker: React.FC<UserIngredientPickerProps> = ({
                       }
                       collection={collection}
                       ingredients={ingredients}
-                      loading={loading}
+                      loading={loading && activeInputId === input.id}
                       onInputChange={handleInputChange}
                       onIngredientSelect={handleIngredientSelect}
                     />
