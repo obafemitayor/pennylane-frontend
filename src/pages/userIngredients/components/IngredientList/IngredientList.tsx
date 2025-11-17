@@ -17,6 +17,7 @@ export const IngredientList: React.FC<IngredientListProps> = ({ userId, userIngr
   const { deleteIngredient, loading } = useUserIngredients(userId);
   const [editingIngredient, setEditingIngredient] = useState<UserIngredient | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deletingIngredientId, setDeletingIngredientId] = useState<number | null>(null);
 
   const handleEdit = (ingredient: UserIngredient) => {
     setEditingIngredient(ingredient);
@@ -32,12 +33,14 @@ export const IngredientList: React.FC<IngredientListProps> = ({ userId, userIngr
     if (!window.confirm(intl.formatMessage(messages.confirmDelete))) {
       return;
     }
+    setDeletingIngredientId(ingredientId);
     try {
       await deleteIngredient(ingredientId);
       window.location.reload();
     } catch (err: unknown) {
       const error = err instanceof Error ? err : new Error(String(err));
       alert(error.message || intl.formatMessage(messages.failedToDelete));
+      setDeletingIngredientId(null);
     }
   };
 
@@ -73,8 +76,8 @@ export const IngredientList: React.FC<IngredientListProps> = ({ userId, userIngr
                       onClick={() => handleDelete(userIngredient.id)}
                       size="sm"
                       colorPalette="red"
-                      loading={loading}
-                      disabled={loading}
+                      loading={loading && deletingIngredientId === userIngredient.id}
+                      disabled={loading && deletingIngredientId === userIngredient.id}
                     >
                       <MdDelete aria-hidden="true" />
                     </IconButton>
